@@ -1,0 +1,333 @@
+{
+  "categories": [
+    {
+      "id": "cat_hoodies",
+      "title": "Hoodies",
+      "slug": "hoodies",
+      "icon_url": "assets/images/category_hoodies.png",
+      "background_color": "#2D2640"
+    },
+    {
+      "id": "cat_shorts",
+      "title": "Shorts",
+      "slug": "shorts",
+      "icon_url": "assets/images/category_shorts.png",
+      "background_color": "#2D2640"
+    },
+    {
+      "id": "cat_shoes",
+      "title": "Shoes",
+      "slug": "shoes",
+      "icon_url": "assets/images/category_shoes.png",
+      "background_color": "#2D2640"
+    },
+    {
+      "id": "cat_bags",
+      "title": "Bags",
+      "slug": "bags",
+      "icon_url": "assets/images/category_bag.png",
+      "background_color": "#2D2640"
+    },
+    {
+      "id": "cat_accessories",
+      "title": "Accessories",
+      "slug": "accessories",
+      "icon_url": "assets/images/category_accessories.png",
+      "background_color": "#2D2640"
+    }
+  ],
+  "products": [
+    {
+      "id": "van_h1",
+      "category_id": "cat_hoodies",
+      "name": "Oversized Fleece Hoodie",
+      "price": 89.0,
+      "compare_at_price": 120.0,
+      "description": "Soft fleece, relaxed fit.",
+      "image_url": "assets/images/product_hoodie.png",
+      "rating": 4.8,
+      "stock": 40
+    },
+    {
+      "id": "van_h2",
+      "category_id": "cat_hoodies",
+      "name": "Zip Tech Hoodie",
+      "price": 95.5,
+      "description": "Lightweight tech fabric.",
+      "image_url": "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&q=80&w=600",
+      "rating": 4.6,
+      "stock": 32
+    },
+    {
+      "id": "van_h3",
+      "category_id": "cat_hoodies",
+      "name": "Minimal Pullover",
+      "price": 72.0,
+      "description": "Clean lines, daily wear.",
+      "image_url": "https://images.unsplash.com/photo-1576566588028-4147f384af1c?auto=format&fit=crop&q=80&w=600",
+      "rating": 4.7,
+      "stock": 28
+    },
+    {
+      "id": "van_h4",
+      "category_id": "cat_hoodies",
+      "name": "Heavyweight Hoodie",
+      "price": 110.0,
+      "compare_at_price": 139.0,
+      "description": "Warm brushed interior.",
+      "image_url": "https://images.unsplash.com/photo-1620799140408-ed534a59a0b6?auto=format&fit=crop&q=80&w=600",
+      "rating": 4.9,
+      "stock": 22
+    },
+    {
+      "id": "van_h5",
+      "category_id": "cat_hoodies",
+      "name": "Street Logo Hoodie",
+      "price": 84.0,
+      "description": "Dropped shoulders, bold logo.",
+      "image_url": "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=600",
+      "rating": 4.5,
+      "stock": 35
+    },
+    {
+      "id": "van_s1",
+      "category_id": "cat_shorts",
+      "name": "Mesh Training Shorts",
+      "price": 42.0,
+      "description": "Breathable mesh panels.",
+      "image_url": "https://images.unsplash.com/photo-1591195853828-11db59a44dad?auto=format&fit=crop&q=80&w=600",
+      "rating": 4.4,
+      "stock": 50
+    },
+    {
+      "id": "van_s2",
+      "category_id": "cat_shorts",
+      "name": "Chino Shorts",
+      "price": 58.0,
+      "compare_at_price": 75.0,
+      "description": "Slim taper, stretch cotton.",
+      "image_url": "https://images.unsplash.com/photo-1596755094514-f87c34b867e3?auto=format&fit=crop&q=80&w=600",
+      "rating": 4.6,
+      "stock": 44
+    },
+    {
+      "id": "van_s3",
+      "category_id": "cat_shorts",
+      "name": "Cargo Shorts",
+      "price": 64.0,
+      "description": "Utility pockets, durable twill.",
+      "image_url": "https://images.unsplash.com/photo-1506629082955-511b1e2e3f21?auto=format&fit=crop&q=80&w=600",
+      "rating": 4.3,
+      "stock": 30
+    },
+    {
+      "id": "van_s4",
+      "category_id": "cat_shorts",
+      "name": "Linen Summer Shorts",
+      "price": 49.0,
+      "description": "Light linen blend.",
+      "image_url": "https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&q=80&w=600",
+      "rating": 4.5,
+      "stock": 26
+    },
+    {
+      "id": "van_s5",
+      "category_id": "cat_shorts",
+      "name": "Running 5\" Shorts",
+      "price": 38.0,
+      "description": "Liner, reflective details.",
+      "image_url": "https://images.unsplash.com/photo-1594882645126-14020914d58d?auto=format&fit=crop&q=80&w=600",
+      "rating": 4.7,
+      "stock": 55
+    },
+    {
+      "id": "van_sh1",
+      "category_id": "cat_shoes",
+      "name": "Max Cirro Men's Slides",
+      "price": 55.0,
+      "compare_at_price": 100.97,
+      "description": "Comfort slides for everyday wear.",
+      "image_url": "assets/images/product_hoodie.png",
+      "rating": 4.6,
+      "stock": 48
+    },
+    {
+      "id": "van_sh2",
+      "category_id": "cat_shoes",
+      "name": "Court Leather Sneakers",
+      "price": 129.0,
+      "description": "Classic cupsole silhouette.",
+      "image_url": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=600",
+      "rating": 4.8,
+      "stock": 36
+    },
+    {
+      "id": "van_sh3",
+      "category_id": "cat_shoes",
+      "name": "Trail Runner Pro",
+      "price": 149.0,
+      "compare_at_price": 179.0,
+      "description": "Grip outsole, cushioned mid.",
+      "image_url": "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?auto=format&fit=crop&q=80&w=600",
+      "rating": 4.7,
+      "stock": 24
+    },
+    {
+      "id": "van_sh4",
+      "category_id": "cat_shoes",
+      "name": "Minimal Low Sneakers",
+      "price": 99.0,
+      "description": "Full-grain leather upper.",
+      "image_url": "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?auto=format&fit=crop&q=80&w=600",
+      "rating": 4.5,
+      "stock": 41
+    },
+    {
+      "id": "van_sh5",
+      "category_id": "cat_shoes",
+      "name": "Retro High-Tops",
+      "price": 119.0,
+      "description": "Padded collar, vintage paneling.",
+      "image_url": "https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&q=80&w=600",
+      "rating": 4.6,
+      "stock": 19
+    },
+    {
+      "id": "van_b1",
+      "category_id": "cat_bags",
+      "name": "Urban Tote Bag",
+      "price": 45.0,
+      "description": "Canvas, reinforced straps.",
+      "image_url": "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&q=80&w=600",
+      "rating": 4.4,
+      "stock": 60
+    },
+    {
+      "id": "van_b2",
+      "category_id": "cat_bags",
+      "name": "Leather Crossbody",
+      "price": 89.0,
+      "compare_at_price": 115.0,
+      "description": "Compact, adjustable strap.",
+      "image_url": "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&q=80&w=600",
+      "rating": 4.7,
+      "stock": 33
+    },
+    {
+      "id": "van_b3",
+      "category_id": "cat_bags",
+      "name": "Roll-Top Backpack",
+      "price": 79.0,
+      "description": "Weather-resistant shell.",
+      "image_url": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&q=80&w=600",
+      "rating": 4.8,
+      "stock": 27
+    },
+    {
+      "id": "van_b4",
+      "category_id": "cat_bags",
+      "name": "Gym Duffel",
+      "price": 62.0,
+      "description": "Ventilated shoe pocket.",
+      "image_url": "https://images.unsplash.com/photo-1597484661643-2f5fef640dd1?auto=format&fit=crop&q=80&w=600",
+      "rating": 4.5,
+      "stock": 38
+    },
+    {
+      "id": "van_b5",
+      "category_id": "cat_bags",
+      "name": "Slim Laptop Brief",
+      "price": 95.0,
+      "description": "Fits 15\" laptop, organizer slots.",
+      "image_url": "https://images.unsplash.com/photo-1622560480605-d83c853bc5c3?auto=format&fit=crop&q=80&w=600",
+      "rating": 4.6,
+      "stock": 21
+    },
+    {
+      "id": "van_a1",
+      "category_id": "cat_accessories",
+      "name": "Metal Frame Sunglasses",
+      "price": 36.0,
+      "description": "Polarized lenses.",
+      "image_url": "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&q=80&w=600",
+      "rating": 4.5,
+      "stock": 70
+    },
+    {
+      "id": "van_a2",
+      "category_id": "cat_accessories",
+      "name": "Leather Belt",
+      "price": 44.0,
+      "compare_at_price": 59.0,
+      "description": "Matte buckle, full grain.",
+      "image_url": "https://images.unsplash.com/photo-1624222247344-550fb60583fd?auto=format&fit=crop&q=80&w=600",
+      "rating": 4.4,
+      "stock": 45
+    },
+    {
+      "id": "van_a3",
+      "category_id": "cat_accessories",
+      "name": "Wool Beanie",
+      "price": 28.0,
+      "description": "Rib knit, soft merino blend.",
+      "image_url": "https://images.unsplash.com/photo-1576871337632-b9aef4cadb21?auto=format&fit=crop&q=80&w=600",
+      "rating": 4.6,
+      "stock": 52
+    },
+    {
+      "id": "van_a4",
+      "category_id": "cat_accessories",
+      "name": "Steel Watch",
+      "price": 189.0,
+      "description": "Minimal dial, sapphire glass.",
+      "image_url": "https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&q=80&w=600",
+      "rating": 4.8,
+      "stock": 15
+    },
+    {
+      "id": "van_a5",
+      "category_id": "cat_accessories",
+      "name": "Canvas Cap",
+      "price": 32.0,
+      "description": "Structured crown, adjustable.",
+      "image_url": "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&q=80&w=600",
+      "rating": 4.3,
+      "stock": 64
+    },
+    {
+      "id": "van_ts1",
+      "category_id": "cat_hoodies",
+      "name": "Men's Harrington Jacket",
+      "price": 148.0,
+      "description": "Lightweight corduroy jacket with zip front.",
+      "image_url": "assets/images/product_jachet.png",
+      "rating": 4.8,
+      "stock": 32
+    }
+  ],
+  "home_lists": {
+    "top_selling": ["van_ts1", "van_sh1", "van_h1", "van_b2", "van_s2"],
+    "new_in_shelves": [
+      {
+        "title_key": "home.newInHoodies",
+        "product_ids": ["van_h1", "van_h2", "van_h3", "van_h4", "van_h5"]
+      },
+      {
+        "title_key": "home.newInShorts",
+        "product_ids": ["van_s1", "van_s2", "van_s3", "van_s4", "van_s5"]
+      },
+      {
+        "title_key": "home.newInShoes",
+        "product_ids": ["van_sh1", "van_sh2", "van_sh3", "van_sh4", "van_sh5"]
+      },
+      {
+        "title_key": "home.newInBags",
+        "product_ids": ["van_b1", "van_b2", "van_b3", "van_b4", "van_b5"]
+      },
+      {
+        "title_key": "home.newInAccessories",
+        "product_ids": ["van_a1", "van_a2", "van_a3", "van_a4", "van_a5"]
+      }
+    ]
+  }
+}
