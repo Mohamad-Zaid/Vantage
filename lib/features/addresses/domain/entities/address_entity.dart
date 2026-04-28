@@ -1,7 +1,8 @@
 import 'package:equatable/equatable.dart';
+import 'package:vantage/core/errors/domain_exceptions.dart';
 
 final class AddressEntity extends Equatable {
-  const AddressEntity({
+  const AddressEntity._({
     required this.id,
     required this.street,
     required this.city,
@@ -9,7 +10,48 @@ final class AddressEntity extends Equatable {
     required this.zipCode,
   });
 
-  // Empty for a new address until Firestore returns a document id.
+  factory AddressEntity({
+    required String id,
+    required String street,
+    required String city,
+    required String state,
+    required String zipCode,
+  }) {
+    _validatePostalFields(
+      street: street,
+      city: city,
+      state: state,
+      zipCode: zipCode,
+    );
+    return AddressEntity._(
+      id: id,
+      street: street,
+      city: city,
+      state: state,
+      zipCode: zipCode,
+    );
+  }
+
+  static void _validatePostalFields({
+    required String street,
+    required String city,
+    required String state,
+    required String zipCode,
+  }) {
+    if (street.trim().isEmpty) {
+      throw const DomainValidationException('street must not be empty');
+    }
+    if (city.trim().isEmpty) {
+      throw const DomainValidationException('city must not be empty');
+    }
+    if (state.trim().isEmpty) {
+      throw const DomainValidationException('state must not be empty');
+    }
+    if (zipCode.trim().isEmpty) {
+      throw const DomainValidationException('zipCode must not be empty');
+    }
+  }
+
   final String id;
   final String street;
   final String city;
@@ -18,30 +60,54 @@ final class AddressEntity extends Equatable {
 
   String get singleLinePreview {
     final tail = [city, state, zipCode]
-        .map((s) => s.trim())
-        .where((s) => s.isNotEmpty)
+        .map((segment) => segment.trim())
+        .where((segment) => segment.isNotEmpty)
         .join(' ');
-    final s = street.trim();
-    if (s.isEmpty) return tail;
-    if (tail.isEmpty) return s;
-    return '$s, $tail';
+    final trimmedStreet = street.trim();
+    if (trimmedStreet.isEmpty) return tail;
+    if (tail.isEmpty) return trimmedStreet;
+    return '$trimmedStreet, $tail';
   }
 
-  AddressEntity copyWith({
-    String? id,
-    String? street,
-    String? city,
-    String? state,
-    String? zipCode,
-  }) {
-    return AddressEntity(
-      id: id ?? this.id,
-      street: street ?? this.street,
-      city: city ?? this.city,
-      state: state ?? this.state,
-      zipCode: zipCode ?? this.zipCode,
-    );
-  }
+  AddressEntity withId(String newId) => AddressEntity(
+        id: newId,
+        street: street,
+        city: city,
+        state: state,
+        zipCode: zipCode,
+      );
+
+  AddressEntity withStreet(String newStreet) => AddressEntity(
+        id: id,
+        street: newStreet,
+        city: city,
+        state: state,
+        zipCode: zipCode,
+      );
+
+  AddressEntity withCity(String newCity) => AddressEntity(
+        id: id,
+        street: street,
+        city: newCity,
+        state: state,
+        zipCode: zipCode,
+      );
+
+  AddressEntity withState(String newState) => AddressEntity(
+        id: id,
+        street: street,
+        city: city,
+        state: newState,
+        zipCode: zipCode,
+      );
+
+  AddressEntity withZipCode(String newZipCode) => AddressEntity(
+        id: id,
+        street: street,
+        city: city,
+        state: state,
+        zipCode: newZipCode,
+      );
 
   @override
   List<Object?> get props => [id, street, city, state, zipCode];

@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:vantage/core/constants/firestore_fields.dart';
+import 'package:vantage/core/persistence/firestore_user_scoped_contexts.dart';
 import 'package:vantage/features/addresses/domain/entities/address_entity.dart';
 
 abstract interface class AddressesRemoteDataSource {
@@ -18,8 +20,10 @@ final class AddressesRemoteDataSourceImpl implements AddressesRemoteDataSource {
 
   final FirebaseFirestore _db;
 
-  CollectionReference<Map<String, dynamic>> _col(String userId) =>
-      _db.collection('users').doc(userId).collection('addresses');
+  CollectionReference<Map<String, dynamic>> _col(String userId) => _db
+      .collection(FirestoreUserRoot.collectionId)
+      .doc(userId)
+      .collection(AddressesFirestoreContext.collectionId);
 
   @override
   Stream<List<AddressEntity>> watchAddresses(String userId) {
@@ -38,8 +42,8 @@ final class AddressesRemoteDataSourceImpl implements AddressesRemoteDataSource {
     List<QueryDocumentSnapshot<Map<String, dynamic>>> docs,
   ) {
     docs.sort((a, b) {
-      final ta = a.data()['createdAt'];
-      final tb = b.data()['createdAt'];
+      final ta = a.data()[AddressFields.createdAt];
+      final tb = b.data()[AddressFields.createdAt];
       if (ta is Timestamp && tb is Timestamp) {
         return tb.compareTo(ta);
       }
@@ -52,23 +56,22 @@ final class AddressesRemoteDataSourceImpl implements AddressesRemoteDataSource {
   Future<void> upsertAddress(String userId, AddressEntity address) async {
     final col = _col(userId);
     if (address.id.isEmpty) {
-      final ref = col.doc();
-      await ref.set({
-        'street': address.street,
-        'city': address.city,
-        'state': address.state,
-        'zipCode': address.zipCode,
-        'createdAt': FieldValue.serverTimestamp(),
+      await col.doc().set({
+        AddressFields.street: address.street,
+        AddressFields.city: address.city,
+        AddressFields.state: address.state,
+        AddressFields.zipCode: address.zipCode,
+        AddressFields.createdAt: FieldValue.serverTimestamp(),
       });
       return;
     }
     await col.doc(address.id).set(
       {
-        'street': address.street,
-        'city': address.city,
-        'state': address.state,
-        'zipCode': address.zipCode,
-        'updatedAt': FieldValue.serverTimestamp(),
+        AddressFields.street: address.street,
+        AddressFields.city: address.city,
+        AddressFields.state: address.state,
+        AddressFields.zipCode: address.zipCode,
+        AddressFields.updatedAt: FieldValue.serverTimestamp(),
       },
       SetOptions(merge: true),
     );
@@ -85,10 +88,10 @@ final class AddressesRemoteDataSourceImpl implements AddressesRemoteDataSource {
     final m = doc.data();
     return AddressEntity(
       id: doc.id,
-      street: m['street'] as String? ?? '',
-      city: m['city'] as String? ?? '',
-      state: m['state'] as String? ?? '',
-      zipCode: m['zipCode'] as String? ?? '',
+      street: m[AddressFields.street] as String? ?? '',
+      city: m[AddressFields.city] as String? ?? '',
+      state: m[AddressFields.state] as String? ?? '',
+      zipCode: m[AddressFields.zipCode] as String? ?? '',
     );
   }
 }

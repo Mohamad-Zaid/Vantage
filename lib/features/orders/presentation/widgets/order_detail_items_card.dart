@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/translations/locale_keys.g.dart';
 import 'package:vantage/features/cart/presentation/widgets/cart_money.dart';
@@ -42,7 +43,7 @@ class OrderDetailItemsCard extends StatelessWidget {
           child: Row(
             children: [
               _LeadingIcon(titleColor: titleColor),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppSpacing.md),
               Expanded(
                 child: Text(
                   LocaleKeys.orderDetail_itemsLine.tr(
@@ -145,7 +146,7 @@ class _OrderDetailItemsExpandable extends StatelessWidget {
               expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 for (var i = 0; i < lineItems.length; i++) ...[
-                  if (i > 0) const SizedBox(height: 12),
+                  if (i > 0) const SizedBox(height: AppSpacing.md),
                   _OrderLineRow(
                     line: lineItems[i],
                     titleColor: titleColor,
@@ -227,7 +228,7 @@ class _OrderLineRow extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           child: _LineThumb(url: line.imageUrl),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: AppSpacing.md),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -242,7 +243,7 @@ class _OrderLineRow extends StatelessWidget {
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: AppSpacing.xxs),
               Text(
                 LocaleKeys.cart_lineSize.tr(
                   namedArgs: {'size': line.size},
@@ -263,7 +264,7 @@ class _OrderLineRow extends StatelessWidget {
                   fontWeight: FontWeight.w400,
                 ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: AppSpacing.xxs),
               Text(
                 '${LocaleKeys.productDetail_quantity.tr()}: ${line.quantity}',
                 style: GoogleFonts.nunitoSans(
@@ -275,7 +276,7 @@ class _OrderLineRow extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(width: 8),
+        const SizedBox(width: AppSpacing.sm),
         Text(
           CartMoney.usd(line.lineTotal),
           style: GoogleFonts.gabarito(

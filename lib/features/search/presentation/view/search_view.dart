@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/widgets/vantage_circle_back_button.dart';
 import 'package:vantage/core/widgets/vantage_loading_indicator.dart';
@@ -174,7 +175,7 @@ class _SearchTopBar extends StatelessWidget {
       child: Row(
         children: [
           VantageCircleBackButton(onPressed: onBack),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: SizedBox(
               height: 40,

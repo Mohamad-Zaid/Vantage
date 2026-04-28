@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/translations/locale_keys.g.dart';
 import 'package:vantage/generated/assets.dart';
@@ -159,7 +160,7 @@ class HomeTopBar extends StatelessWidget {
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
-                              const SizedBox(width: 4),
+                              const SizedBox(width: AppSpacing.xxs),
                               SvgPicture.asset(
                                 Assets.vectorArrowDown,
                                 width: 16,

@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/translations/locale_keys.g.dart';
 import 'package:vantage/core/widgets/vantage_primary_button.dart';
@@ -29,7 +30,7 @@ class CartEmptyView extends StatelessWidget {
             height: 180,
             fit: BoxFit.contain,
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: AppSpacing.xl),
           Text(
             needsSignIn
                 ? LocaleKeys.cart_signInToCart.tr()
@@ -41,7 +42,7 @@ class CartEmptyView extends StatelessWidget {
               fontWeight: FontWeight.w700,
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: AppSpacing.xl),
           if (!needsSignIn)
             VantagePrimaryButton(
               label: LocaleKeys.cart_exploreCategories.tr(),

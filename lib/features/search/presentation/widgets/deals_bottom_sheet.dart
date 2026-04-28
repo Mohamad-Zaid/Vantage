@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/widgets/filter_option_tile.dart';
 import 'package:vantage/core/widgets/filter_sheet_header.dart';
@@ -50,7 +51,7 @@ class _DealsBottomSheet extends StatelessWidget {
                     context, (value: null as DealFilter?, cleared: true)),
                 onClose: () => Navigator.pop(context, null),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.xl),
               for (final opt in _options) ...[
                 FilterOptionTile(
                   label: opt.label,
@@ -60,7 +61,7 @@ class _DealsBottomSheet extends StatelessWidget {
                     (value: opt.value as DealFilter?, cleared: false),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.lg),
               ],
             ],
           ),

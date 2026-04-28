@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/translations/locale_keys.g.dart';
 import 'package:vantage/di/injection.dart';
@@ -50,19 +51,19 @@ class _HelpSupportPageState extends State<HelpSupportPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildSectionTitle(context, LocaleKeys.support_faqs_title.tr()),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.lg),
             _FAQSection(cubit: _supportCubit),
-            const SizedBox(height: 32),
+            const SizedBox(height: AppSpacing.xxl),
             _buildSectionTitle(context, LocaleKeys.support_contact_us_title.tr()),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.lg),
             const _ContactUsSection(),
-            const SizedBox(height: 32),
+            const SizedBox(height: AppSpacing.xxl),
             _buildSectionTitle(context, LocaleKeys.support_report_bug_title.tr()),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.lg),
             const _ReportBugSection(),
-            const SizedBox(height: 32),
+            const SizedBox(height: AppSpacing.xxl),
             _buildSectionTitle(context, LocaleKeys.support_legal_about_title.tr()),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.lg),
             const _LegalAboutSection(),
           ],
         ),
@@ -173,7 +174,7 @@ class _FAQSection extends StatelessWidget {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: faqs.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 12),
+              separatorBuilder: (context, index) => const SizedBox(height: AppSpacing.md),
               itemBuilder: (context, index) {
                 final faq = faqs[index];
                 return _HelpSupportCard(
@@ -237,8 +238,8 @@ class _ContactUsSection extends StatelessWidget {
       if (await canLaunchUrl(url)) {
         await launchUrl(url);
       }
-    } catch (_) {
-      // Demo: ignore bad/missing URLs.
+    } catch (e, st) {
+      debugPrint('_ContactUsSection._launchUrl failed: $e\n$st');
     }
   }
 
@@ -303,7 +304,7 @@ class _ReportBugSection extends StatelessWidget {
                   border: const OutlineInputBorder(),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.lg),
               ElevatedButton(
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -338,21 +339,21 @@ class _LegalAboutSection extends StatelessWidget {
             body: LocaleKeys.support_legal_privacy_body.tr(),
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSpacing.md),
         _HelpSupportCard(
           child: _SupportExpansionTile(
             title: LocaleKeys.support_terms_of_service.tr(),
             body: LocaleKeys.support_legal_terms_body.tr(),
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSpacing.md),
         _HelpSupportCard(
           child: _SupportExpansionTile(
             title: LocaleKeys.support_legal_about_expand_title.tr(),
             body: LocaleKeys.support_legal_about_body.tr(),
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSpacing.lg),
         Center(
           child: Text(
             'Version 1.0.0',

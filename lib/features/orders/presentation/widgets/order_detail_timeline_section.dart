@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 
 import '../../domain/entities/order_detail_entity.dart';
@@ -23,7 +24,7 @@ class OrderDetailTimelineSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         for (var i = 0; i < steps.length; i++) ...[
-          if (i > 0) const SizedBox(height: 28),
+          if (i > 0) const SizedBox(height: AppSpacing.inset28),
           _TimelineRow(
             title: steps[i].titleKey.tr(),
             dateText: steps[i].dateText,
@@ -78,7 +79,7 @@ class _TimelineRow extends StatelessWidget {
               ? const Icon(Icons.check_rounded, size: 14, color: Colors.white)
               : null,
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: AppSpacing.md),
         Expanded(
           child: Text(
             title,

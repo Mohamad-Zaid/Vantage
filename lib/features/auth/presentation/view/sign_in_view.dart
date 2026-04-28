@@ -48,8 +48,9 @@ class _SignInPageState extends State<SignInPage> {
         context.router.replaceAll([const NavigationRoute()]);
         return;
       }
-    } catch (_) {
+    } catch (e, st) {
       // getCurrentUser can throw; still show the sign-in form.
+      debugPrint('_SignInPageState._resolveExistingSession failed: $e\n$st');
     }
     if (mounted) {
       _coldStartCubit.markReady();

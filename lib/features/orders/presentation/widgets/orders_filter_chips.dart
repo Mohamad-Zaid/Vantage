@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/translations/locale_keys.g.dart';
 
@@ -43,7 +44,7 @@ class OrdersFilterChips extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           for (var i = 0; i < OrderStatusFilter.values.length; i++) ...[
-            if (i > 0) const SizedBox(width: 13),
+            if (i > 0) const SizedBox(width: AppSpacing.inset13),
             _FilterChip(
               label: _label(OrderStatusFilter.values[i]),
               selected: OrderStatusFilter.values[i] == selected,

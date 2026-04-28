@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/features/search/domain/entities/search_filter.dart';
 import 'package:vantage/generated/assets.dart';
@@ -44,7 +45,7 @@ class SearchFilterChipsBar extends StatelessWidget {
                     BlendMode.srcIn,
                   ),
                 ),
-                const SizedBox(width: 4),
+                const SizedBox(width: AppSpacing.xxs),
                 Text(
                   '$count',
                   style: _chipTextStyle(active: true),
@@ -52,7 +53,7 @@ class SearchFilterChipsBar extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(width: 4),
+          const SizedBox(width: AppSpacing.xxs),
 
           _FilterChip(
             isDark: isDark,
@@ -68,7 +69,7 @@ class SearchFilterChipsBar extends StatelessWidget {
               style: _chipTextStyle(active: filter.deal != null),
             ),
           ),
-          const SizedBox(width: 4),
+          const SizedBox(width: AppSpacing.xxs),
 
           _FilterChip(
             isDark: isDark,
@@ -95,7 +96,7 @@ class SearchFilterChipsBar extends StatelessWidget {
                       active: filter.minPrice != null ||
                           filter.maxPrice != null),
                 ),
-                const SizedBox(width: 4),
+                const SizedBox(width: AppSpacing.xxs),
                 SvgPicture.asset(
                   Assets.vectorArrowDown,
                   width: 16,
@@ -112,7 +113,7 @@ class SearchFilterChipsBar extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(width: 4),
+          const SizedBox(width: AppSpacing.xxs),
 
           _FilterChip(
             isDark: isDark,
@@ -132,7 +133,7 @@ class SearchFilterChipsBar extends StatelessWidget {
                   style: _chipTextStyle(
                       active: filter.sortBy != SortBy.recommended),
                 ),
-                const SizedBox(width: 4),
+                const SizedBox(width: AppSpacing.xxs),
                 SvgPicture.asset(
                   Assets.vectorArrowDown,
                   width: 16,
@@ -149,7 +150,7 @@ class SearchFilterChipsBar extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(width: 4),
+          const SizedBox(width: AppSpacing.xxs),
 
           _FilterChip(
             isDark: isDark,
@@ -167,7 +168,7 @@ class SearchFilterChipsBar extends StatelessWidget {
                   _genderLabel(filter.gender),
                   style: _chipTextStyle(active: filter.gender != null),
                 ),
-                const SizedBox(width: 4),
+                const SizedBox(width: AppSpacing.xxs),
                 SvgPicture.asset(
                   Assets.vectorArrowDown,
                   width: 16,

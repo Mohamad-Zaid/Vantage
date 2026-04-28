@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vantage/core/catalog/shop_categories_catalog.dart';
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/translations/locale_keys.g.dart';
 import 'package:vantage/router/app_router.dart';
@@ -21,7 +22,7 @@ class SearchCategoryList extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.lg),
           Text(
             LocaleKeys.categories_shopByTitle.tr(),
             style: GoogleFonts.gabarito(
@@ -31,12 +32,12 @@ class SearchCategoryList extends StatelessWidget {
               height: 1.2,
             ),
           ),
-          const SizedBox(height: 19),
+          const SizedBox(height: AppSpacing.inset19),
           ListView.separated(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: kShopCategoryCatalog.length,
-            separatorBuilder: (context, index) => const SizedBox(height: 8),
+            separatorBuilder: (context, index) => const SizedBox(height: AppSpacing.sm),
             itemBuilder: (context, index) {
               final item = kShopCategoryCatalog[index];
               return _CategoryTile(
@@ -83,7 +84,7 @@ class _CategoryTile extends StatelessWidget {
           height: 64,
           child: Row(
             children: [
-              const SizedBox(width: 12),
+              const SizedBox(width: AppSpacing.md),
               Container(
                 width: 40,
                 height: 40,
@@ -95,7 +96,7 @@ class _CategoryTile extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: AppSpacing.lg),
               Expanded(
                 child: Text(
                   title,

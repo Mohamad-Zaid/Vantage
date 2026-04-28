@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/widgets/vantage_loading_indicator.dart';
 import 'package:vantage/core/widgets/vantage_success_burst_overlay.dart';
@@ -154,14 +155,20 @@ class _CreateAccountViewState extends State<_CreateAccountView> {
         height: 1.25,
       ),
       errorMaxLines: 3,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.inset18,
+      ),
     );
   }
 
   // Overlay-local when the submit button’s RenderBox isn’t available yet.
   Offset _fallbackAuthSubmitAnchor(BuildContext context) {
-    final s = MediaQuery.sizeOf(context);
-    return Offset(s.width / 2, s.height - 120);
+    final screenSize = MediaQuery.sizeOf(context);
+    return Offset(
+      screenSize.width / 2,
+      screenSize.height - AppSpacing.overlayAnchorBottomOffset,
+    );
   }
 
   @override
@@ -387,7 +394,7 @@ class _CreateAccountViewState extends State<_CreateAccountView> {
                               : Text(LocaleKeys.auth_continue.tr()),
                         ),
                       ),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: AppSpacing.xl),
                     ],
                   ),
                 );

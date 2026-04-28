@@ -82,7 +82,8 @@ class _ProfileView extends StatelessWidget {
       if (navContext.mounted) {
         navContext.router.replaceAll([const SignInRoute()]);
       }
-    } catch (_) {
+    } catch (e, st) {
+      debugPrint('_ProfileView._onSignOut failed: $e\n$st');
       if (context.mounted) {
         _hideSignOutLoadingDialog(context);
         ScaffoldMessenger.of(context).showSnackBar(

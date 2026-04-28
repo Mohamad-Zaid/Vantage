@@ -17,7 +17,7 @@ final class AppSettingsCubit {
   Future<void> init() async {
     _prefs ??= await SharedPreferences.getInstance();
     final index = _prefs!.getInt(_themeKey);
-    if (index != null && index >= 0 && index <= 2) {
+    if (index != null && index >= 0 && index < ThemeMode.values.length) {
       _themeMode.value = ThemeMode.values[index];
     }
   }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/translations/locale_keys.g.dart';
 import 'package:vantage/generated/assets.dart';
@@ -32,7 +33,7 @@ class CartCouponRow extends StatelessWidget {
           child: Row(
             children: [
               SvgPicture.asset(Assets.vectorCartCoupon, width: 22, height: 22),
-              const SizedBox(width: 10),
+              const SizedBox(width: AppSpacing.inset10),
               Expanded(
                 child: Text(
                   LocaleKeys.cart_couponHint.tr(),

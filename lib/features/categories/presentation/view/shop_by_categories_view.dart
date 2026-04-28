@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:vantage/core/catalog/shop_categories_catalog.dart';
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/translations/locale_keys.g.dart';
 import 'package:vantage/core/widgets/vantage_circle_back_button.dart';
@@ -28,7 +29,7 @@ class ShopByCategoriesPage extends StatelessWidget {
               VantageCircleBackButton(
                 onPressed: () => context.router.maybePop(),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.lg),
               Text(
                 LocaleKeys.categories_shopByTitle.tr(),
                 style: GoogleFonts.gabarito(
@@ -38,11 +39,11 @@ class ShopByCategoriesPage extends StatelessWidget {
                   height: 1.2,
                 ),
               ),
-              const SizedBox(height: 19),
+              const SizedBox(height: AppSpacing.inset19),
               Expanded(
                 child: ListView.separated(
                   itemCount: kShopCategoryCatalog.length,
-                  separatorBuilder: (_, _) => const SizedBox(height: 8),
+                  separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.sm),
                   itemBuilder: (context, index) {
                     final item = kShopCategoryCatalog[index];
                     return _ShopCategoryListTile(
@@ -93,7 +94,7 @@ class _ShopCategoryListTile extends StatelessWidget {
           height: _rowHeight,
           child: Row(
             children: [
-              const SizedBox(width: 12),
+              const SizedBox(width: AppSpacing.md),
               Container(
                 width: _avatar,
                 height: _avatar,
@@ -105,7 +106,7 @@ class _ShopCategoryListTile extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: AppSpacing.lg),
               Expanded(
                 child: Text(
                   title,

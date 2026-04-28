@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import 'package:vantage/core/cubits/app_settings_cubit.dart';
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/translations/locale_keys.g.dart';
 import 'package:vantage/core/widgets/filter_option_tile.dart';
@@ -32,7 +33,7 @@ void showProfileThemeSheet(BuildContext context, AppSettingsCubit cubit) {
                   showClear: false,
                   onClose: () => Navigator.of(sheetContext).pop(),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: AppSpacing.xl),
                 FilterOptionTile(
                   label: LocaleKeys.settings_themeSystem.tr(),
                   selected: current == ThemeMode.system,
@@ -41,7 +42,7 @@ void showProfileThemeSheet(BuildContext context, AppSettingsCubit cubit) {
                     Navigator.of(sheetContext).pop();
                   },
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.lg),
                 FilterOptionTile(
                   label: LocaleKeys.settings_themeLight.tr(),
                   selected: current == ThemeMode.light,
@@ -50,7 +51,7 @@ void showProfileThemeSheet(BuildContext context, AppSettingsCubit cubit) {
                     Navigator.of(sheetContext).pop();
                   },
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.lg),
                 FilterOptionTile(
                   label: LocaleKeys.settings_themeDark.tr(),
                   selected: current == ThemeMode.dark,
@@ -93,7 +94,7 @@ void showProfileLanguageSheet(BuildContext context) {
                   showClear: false,
                   onClose: () => Navigator.of(sheetContext).pop(),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: AppSpacing.xl),
                 FilterOptionTile(
                   label: 'English',
                   selected: loc.languageCode == 'en',
@@ -102,7 +103,7 @@ void showProfileLanguageSheet(BuildContext context) {
                     Navigator.of(sheetContext).pop();
                   },
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.lg),
                 FilterOptionTile(
                   label: 'العربية',
                   selected: loc.languageCode == 'ar',

@@ -1,4 +1,6 @@
 import 'package:get_it/get_it.dart';
+import 'package:vantage/core/auth/current_user_provider.dart';
+import 'package:vantage/core/events/domain_event_bus.dart';
 
 import '../features/search/domain/usecases/search_products_usecase.dart';
 import '../features/search/presentation/cubit/search_cubit.dart';
@@ -28,7 +30,7 @@ import '../features/cart/data/repositories_impl/cart_repository_impl.dart';
 import '../features/cart/domain/repositories/cart_repository.dart';
 import '../features/cart/domain/usecases/add_cart_line_usecase.dart';
 import '../features/cart/domain/usecases/clear_cart_usecase.dart';
-import '../features/cart/domain/usecases/place_order_usecase.dart';
+import '../features/orders/domain/usecases/place_order_usecase.dart';
 import '../features/cart/domain/usecases/remove_cart_line_usecase.dart';
 import '../features/cart/domain/usecases/update_cart_line_quantity_usecase.dart';
 import '../features/cart/domain/usecases/watch_cart_usecase.dart';
@@ -51,6 +53,7 @@ import '../features/notifications/domain/repositories/notifications_repository.d
 import '../features/notifications/domain/usecases/delete_notification_usecase.dart';
 import '../features/notifications/domain/usecases/get_notifications_usecase.dart';
 import '../features/notifications/presentation/cubit/notifications_cubit.dart';
+import '../features/notifications/presentation/listeners/order_placed_notification_listener.dart';
 import '../features/orders/data/datasources/orders_remote_datasource.dart';
 import '../features/orders/data/repositories_impl/orders_repository_impl.dart';
 import '../features/orders/domain/repositories/orders_repository.dart';
@@ -80,6 +83,11 @@ Future<void> initInjector() async {
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(sl<AuthRemoteDataSource>()),
   );
+  // AuthRepository implements CurrentUserProvider — reuse the same singleton.
+  sl.registerLazySingleton<CurrentUserProvider>(() => sl<AuthRepository>());
+
+  sl.registerLazySingleton<DomainEventBus>(BroadcastDomainEventBus.new);
+
   sl.registerLazySingleton<WatchAuthStateUseCase>(
     () => WatchAuthStateUseCase(sl<AuthRepository>()),
   );
@@ -231,11 +239,10 @@ Future<void> initInjector() async {
   );
   sl.registerLazySingleton<FavoritesCubit>(
     () => FavoritesCubit(
-      watchAuth: sl<WatchAuthStateUseCase>(),
+      authProvider: sl<CurrentUserProvider>(),
       fetchPage: sl<FetchFavoritesPageUseCase>(),
       addFavorite: sl<AddFavoriteUseCase>(),
       removeFavorite: sl<RemoveFavoriteUseCase>(),
-      getCurrentUser: sl<GetCurrentUserUseCase>(),
     ),
   );
 
@@ -259,12 +266,11 @@ Future<void> initInjector() async {
   );
   sl.registerLazySingleton<AddressesCubit>(
     () => AddressesCubit(
-      watchAuth: sl<WatchAuthStateUseCase>(),
+      authProvider: sl<CurrentUserProvider>(),
       watchAddresses: sl<WatchUserAddressesUseCase>(),
       fetchAddresses: sl<FetchUserAddressesUseCase>(),
       upsertAddress: sl<UpsertAddressUseCase>(),
       deleteAddress: sl<DeleteAddressUseCase>(),
-      getCurrentUser: sl<GetCurrentUserUseCase>(),
     ),
   );
 
@@ -288,17 +294,30 @@ Future<void> initInjector() async {
     () => ClearCartUseCase(sl<CartRepository>()),
   );
   sl.registerLazySingleton<PlaceOrderUseCase>(
-    () => PlaceOrderUseCase(sl<CartRepository>()),
+    () => PlaceOrderUseCase(
+      sl<CartRepository>(),
+      sl<OrdersRepository>(),
+      sl<DomainEventBus>(),
+    ),
   );
   sl.registerLazySingleton<CartCubit>(
     () => CartCubit(
-      watchAuth: sl<WatchAuthStateUseCase>(),
+      authProvider: sl<CurrentUserProvider>(),
+      domainEvents: sl<DomainEventBus>(),
       watchCart: sl<WatchCartUseCase>(),
       addLine: sl<AddCartLineUseCase>(),
       updateQty: sl<UpdateCartLineQuantityUseCase>(),
       removeLine: sl<RemoveCartLineUseCase>(),
       clearCart: sl<ClearCartUseCase>(),
-      getCurrentUser: sl<GetCurrentUserUseCase>(),
     ),
   );
+
+  sl.registerLazySingleton<OrderPlacedNotificationListener>(
+    () => OrderPlacedNotificationListener(
+      sl<DomainEventBus>(),
+      sl<NotificationsRepository>(),
+    ),
+  );
+
+  sl<OrderPlacedNotificationListener>();
 }

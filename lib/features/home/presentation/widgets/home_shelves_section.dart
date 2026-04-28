@@ -9,6 +9,7 @@ import 'package:vantage/core/widgets/home_shelves_loading_shimmer.dart';
 
 import 'home_product_carousel.dart';
 import 'home_section_header.dart';
+import 'package:vantage/core/theme/app_spacing.dart';
 
 class HomeShelvesSection extends StatelessWidget {
   const HomeShelvesSection({super.key, required this.productCubit});
@@ -57,7 +58,7 @@ class HomeShelvesSection extends StatelessWidget {
                   const SizedBox(height: _headerToCarousel),
                   HomeProductCarousel(products: shelf.products),
                 ],
-              const SizedBox(height: 6),
+              const SizedBox(height: AppSpacing.xs),
             ],
           ),
           ProductError(:final message) => Padding(
@@ -65,13 +66,13 @@ class HomeShelvesSection extends StatelessWidget {
             child: Column(
               children: [
                 Text(LocaleKeys.common_error.tr()),
-                const SizedBox(height: 4),
+                const SizedBox(height: AppSpacing.xxs),
                 Text(
                   message,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: AppSpacing.sm),
                 FilledButton(
                   onPressed: productCubit.loadProducts,
                   child: Text(LocaleKeys.common_retry.tr()),

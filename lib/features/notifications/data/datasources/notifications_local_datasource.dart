@@ -4,6 +4,8 @@ abstract class NotificationsLocalDataSource {
   Future<List<NotificationEntity>> readAll();
 
   Future<void> deleteById(String id);
+
+  Future<void> append(NotificationEntity notification);
 }
 
 // Demo in-memory list until a real store backs notifications.
@@ -39,5 +41,10 @@ final class NotificationsLocalDataSourceImpl
   @override
   Future<void> deleteById(String id) async {
     _items.removeWhere((e) => e.id == id);
+  }
+
+  @override
+  Future<void> append(NotificationEntity notification) async {
+    _items.insert(0, notification);
   }
 }

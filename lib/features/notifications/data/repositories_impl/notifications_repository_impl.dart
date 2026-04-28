@@ -12,4 +12,8 @@ final class NotificationsRepositoryImpl implements NotificationsRepository {
 
   @override
   Future<void> deleteNotification(String id) => _local.deleteById(id);
+
+  @override
+  Future<void> appendNotification(NotificationEntity notification) =>
+      _local.append(notification);
 }

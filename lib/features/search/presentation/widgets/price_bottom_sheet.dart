@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/widgets/filter_sheet_header.dart';
 
@@ -118,7 +119,7 @@ class _PriceBottomSheetState extends State<_PriceBottomSheet> {
                       )),
                   onClose: () => Navigator.pop(context, null),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: AppSpacing.xl),
                 SizedBox(
                   height: 56,
                   child: TextField(
@@ -145,7 +146,7 @@ class _PriceBottomSheetState extends State<_PriceBottomSheet> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.lg),
                 SizedBox(
                   height: 56,
                   child: TextField(
@@ -172,7 +173,7 @@ class _PriceBottomSheetState extends State<_PriceBottomSheet> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: AppSpacing.xl),
                 SizedBox(
                   width: double.infinity,
                   height: 56,

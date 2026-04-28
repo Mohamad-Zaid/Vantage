@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/translations/locale_keys.g.dart';
 
@@ -47,7 +48,7 @@ class ProfileInfoCard extends StatelessWidget {
                   color: nameColor,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.sm),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -62,7 +63,7 @@ class ProfileInfoCard extends StatelessWidget {
                     ),
                   ),
                   if (onEdit != null) ...[
-                    const SizedBox(width: 8),
+                    const SizedBox(width: AppSpacing.sm),
                     GestureDetector(
                       onTap: onEdit,
                       behavior: HitTestBehavior.opaque,
@@ -79,7 +80,7 @@ class ProfileInfoCard extends StatelessWidget {
                 ],
               ),
               if (phone != null && phone!.trim().isNotEmpty) ...[
-                const SizedBox(height: 8),
+                const SizedBox(height: AppSpacing.sm),
                 Text(
                   phone!,
                   style: GoogleFonts.nunitoSans(

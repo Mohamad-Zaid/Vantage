@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:vantage/generated/assets.dart';
+import 'package:vantage/core/theme/app_spacing.dart';
 
 class NotificationRowCard extends StatelessWidget {
   const NotificationRowCard({
@@ -41,7 +42,7 @@ class NotificationRowCard extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(width: 21),
+            const SizedBox(width: AppSpacing.inset21),
             Expanded(
               child: Text(
                 message,

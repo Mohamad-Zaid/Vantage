@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/translations/locale_keys.g.dart';
 import 'package:vantage/core/widgets/vantage_circle_back_button.dart';
 import 'package:vantage/core/widgets/vantage_loading_indicator.dart';
 import 'package:vantage/core/widgets/vantage_primary_button.dart';
+import 'package:vantage/core/constants/cart_constants.dart';
 import 'package:vantage/features/cart/presentation/cubit/cart_cubit.dart';
 import 'package:vantage/features/cart/presentation/cubit/cart_state.dart'
     show
@@ -32,12 +34,12 @@ class CartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final titleC =
+    final titleColor =
         isDark ? Colors.white : VantageColors.homeCategoryLabelLight;
     return Scaffold(
       body: SafeArea(
         child: BlocBuilder<CartCubit, CartState>(
-          buildWhen: (a, b) => a != b,
+          buildWhen: (previous, current) => previous != current,
           builder: (context, state) {
             return switch (state) {
               CartInitial() => const Center(child: VantageLoadingIndicator()),
@@ -45,7 +47,7 @@ class CartPage extends StatelessWidget {
               CartNeedSignIn() => Column(
                 children: [
                   _CartHeader(
-                    titleColor: titleC,
+                    titleColor: titleColor,
                     showRemove: false,
                     onBack: () => context.router.maybePop(),
                     onRemoveAll: null,
@@ -58,7 +60,7 @@ class CartPage extends StatelessWidget {
               CartEmpty() => Column(
                 children: [
                   _CartHeader(
-                    titleColor: titleC,
+                    titleColor: titleColor,
                     showRemove: false,
                     onBack: () => context.router.maybePop(),
                     onRemoveAll: null,
@@ -70,14 +72,14 @@ class CartPage extends StatelessWidget {
               ),
               CartError(:final message) => Center(
                 child: Padding(
-                  padding: const EdgeInsets.all(24),
+                  padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
                   child: Text(message),
                 ),
               ),
               CartLoaded() => _CartWithItems(
                 cart: context.read<CartCubit>(),
                 state: state,
-                titleC: titleC,
+                titleColor: titleColor,
               ),
             };
           },
@@ -91,19 +93,19 @@ class _CartWithItems extends StatelessWidget {
   const _CartWithItems({
     required this.cart,
     required this.state,
-    required this.titleC,
+    required this.titleColor,
   });
 
   final CartCubit cart;
   final CartLoaded state;
-  final Color titleC;
+  final Color titleColor;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         _CartHeader(
-          titleColor: titleC,
+          titleColor: titleColor,
           showRemove: true,
           onBack: () => context.router.maybePop(),
           onRemoveAll: () {
@@ -115,7 +117,12 @@ class _CartWithItems extends StatelessWidget {
             onRefresh: () => cart.refresh(),
             child: ListView(
               physics: const AlwaysScrollableScrollPhysics(),
-              padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.screenHorizontal,
+                AppSpacing.sm,
+                AppSpacing.screenHorizontal,
+                AppSpacing.lg,
+              ),
               children: [
               for (final line in state.lines) ...[
                 CartLineTile(
@@ -128,30 +135,34 @@ class _CartWithItems extends StatelessWidget {
                     }
                   },
                   onIncrement: () {
-                    final maxStock = 9999;
-                    if (line.quantity < maxStock) {
+                    if (line.quantity < CartConstants.maxLineQuantity) {
                       cart.setLineQuantity(line.id, line.quantity + 1);
                     }
                   },
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.md),
               ],
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.sm),
               CartSummaryBlock(
-                totals: state.asTotals(),
+                totals: state.totals,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.lg),
               const CartCouponRow(),
             ],
             ),
           ),
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.screenHorizontal,
+            0,
+            AppSpacing.screenHorizontal,
+            AppSpacing.lg,
+          ),
           child: VantagePrimaryButton(
             label: LocaleKeys.cart_checkout.tr(),
             onPressed: () => context.router.push(const CheckoutRoute()),
-            horizontalPadding: 24,
+            horizontalPadding: AppSpacing.screenHorizontal,
           ),
         ),
       ],
@@ -198,7 +209,7 @@ class _CartHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+      padding: const EdgeInsets.all(AppSpacing.sm),
       child: Row(
         children: [
           VantageCircleBackButton(onPressed: onBack),
@@ -226,7 +237,7 @@ class _CartHeader extends StatelessWidget {
               ),
             )
           else
-            const SizedBox(width: 48),
+            const SizedBox(width: AppSpacing.inset48),
         ],
       ),
     );

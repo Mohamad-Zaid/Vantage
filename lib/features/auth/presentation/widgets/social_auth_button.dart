@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vantage/core/theme/app_spacing.dart';
 
 class SocialAuthButton extends StatelessWidget {
   const SocialAuthButton({
@@ -34,7 +35,7 @@ class SocialAuthButton extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           icon,
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSpacing.md),
           Text(label),
         ],
       ),

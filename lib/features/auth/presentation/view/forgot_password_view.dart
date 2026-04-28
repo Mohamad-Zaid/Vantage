@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/widgets/vantage_loading_indicator.dart';
 import 'package:vantage/core/translations/locale_keys.g.dart';
@@ -114,7 +115,10 @@ class _ForgotPasswordViewState extends State<_ForgotPasswordView> {
         fontWeight: FontWeight.w400,
         height: 1.25,
       ),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.inset18,
+      ),
     );
   }
 

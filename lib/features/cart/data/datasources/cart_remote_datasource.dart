@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:vantage/core/constants/firestore_fields.dart';
+import 'package:vantage/core/constants/query_limits.dart';
+import 'package:vantage/core/persistence/firestore_user_scoped_contexts.dart';
 import 'package:vantage/features/cart/data/models/cart_line_model.dart';
 import 'package:vantage/features/cart/domain/entities/cart_line_entity.dart';
 
@@ -22,21 +25,6 @@ abstract interface class CartRemoteDataSource {
   Future<void> deleteLine(String userId, String lineId);
 
   Future<void> clearAll(String userId);
-
-  Future<String> createOrder(
-    String userId, {
-    required List<CartLineEntity> lines,
-    required double subtotal,
-    required double shipping,
-    required double tax,
-    required double total,
-    required String addressStreet,
-    required String addressCity,
-    required String addressState,
-    required String addressZip,
-    required String? addressId,
-    required String paymentLabel,
-  });
 }
 
 final class CartRemoteDataSourceImpl implements CartRemoteDataSource {
@@ -45,18 +33,17 @@ final class CartRemoteDataSourceImpl implements CartRemoteDataSource {
 
   final FirebaseFirestore _db;
 
-  CollectionReference<Map<String, dynamic>> _itemsRef(String userId) =>
-      _db.collection('users').doc(userId).collection('cartItems');
-
-  CollectionReference<Map<String, dynamic>> _ordersRef(String userId) =>
-      _db.collection('users').doc(userId).collection('orders');
+  CollectionReference<Map<String, dynamic>> _itemsRef(String userId) => _db
+      .collection(FirestoreUserRoot.collectionId)
+      .doc(userId)
+      .collection(CartFirestoreContext.collectionId);
 
   @override
   Stream<List<CartLineEntity>> watchItems(String userId) {
-    return _itemsRef(userId).snapshots().map((s) {
-      return s.docs
+    return _itemsRef(userId).snapshots().map((snapshot) {
+      return snapshot.docs
           .map(
-            (d) => cartLineFromFirestoreMap(d.id, d.data()),
+            (doc) => cartLineFromFirestoreMap(doc.id, doc.data()),
           )
           .toList();
     });
@@ -75,37 +62,38 @@ final class CartRemoteDataSourceImpl implements CartRemoteDataSource {
   }) async {
     if (quantityDelta == 0) return;
     final col = _itemsRef(userId);
-    final q = await col
-        .where('productId', isEqualTo: productId)
-        .where('size', isEqualTo: size)
-        .where('colorLabel', isEqualTo: colorLabel)
-        .limit(1)
+    final querySnapshot = await col
+        .where(OrderLineItemFields.productId, isEqualTo: productId)
+        .where(OrderLineItemFields.size, isEqualTo: size)
+        .where(OrderLineItemFields.colorLabel, isEqualTo: colorLabel)
+        .limit(QueryLimits.singleDocumentMatch)
         .get();
-    if (q.docs.isEmpty) {
+    if (querySnapshot.docs.isEmpty) {
       if (quantityDelta < 0) return;
       await col.add({
-        'productId': productId,
-        'name': name,
-        'imageUrl': imageUrl,
-        'unitPrice': unitPrice,
-        'quantity': quantityDelta,
-        'size': size,
-        'colorLabel': colorLabel,
-        'updatedAt': FieldValue.serverTimestamp(),
+        OrderLineItemFields.productId: productId,
+        OrderLineItemFields.name: name,
+        OrderLineItemFields.imageUrl: imageUrl,
+        OrderLineItemFields.unitPrice: unitPrice,
+        OrderLineItemFields.quantity: quantityDelta,
+        OrderLineItemFields.size: size,
+        OrderLineItemFields.colorLabel: colorLabel,
+        CartItemFields.updatedAt: FieldValue.serverTimestamp(),
       });
       return;
     }
-    final doc = q.docs.first;
-    final cur = (doc.data()['quantity'] as num?)?.round() ?? 0;
-    final next = cur + quantityDelta;
-    if (next <= 0) {
+    final doc = querySnapshot.docs.first;
+    final currentQuantity =
+        (doc.data()[OrderLineItemFields.quantity] as num?)?.round() ?? 0;
+    final nextQuantity = currentQuantity + quantityDelta;
+    if (nextQuantity <= 0) {
       await doc.reference.delete();
       return;
     }
     await doc.reference.set(
       {
-        'quantity': next,
-        'updatedAt': FieldValue.serverTimestamp(),
+        OrderLineItemFields.quantity: nextQuantity,
+        CartItemFields.updatedAt: FieldValue.serverTimestamp(),
       },
       SetOptions(merge: true),
     );
@@ -123,8 +111,8 @@ final class CartRemoteDataSourceImpl implements CartRemoteDataSource {
     }
     await _itemsRef(userId).doc(lineId).set(
       {
-        'quantity': quantity,
-        'updatedAt': FieldValue.serverTimestamp(),
+        OrderLineItemFields.quantity: quantity,
+        CartItemFields.updatedAt: FieldValue.serverTimestamp(),
       },
       SetOptions(merge: true),
     );
@@ -138,64 +126,10 @@ final class CartRemoteDataSourceImpl implements CartRemoteDataSource {
   @override
   Future<void> clearAll(String userId) async {
     final snap = await _itemsRef(userId).get();
-    final b = _db.batch();
-    for (final d in snap.docs) {
-      b.delete(d.reference);
+    final batch = _db.batch();
+    for (final doc in snap.docs) {
+      batch.delete(doc.reference);
     }
-    await b.commit();
-  }
-
-  @override
-  Future<String> createOrder(
-    String userId, {
-    required List<CartLineEntity> lines,
-    required double subtotal,
-    required double shipping,
-    required double tax,
-    required double total,
-    required String addressStreet,
-    required String addressCity,
-    required String addressState,
-    required String addressZip,
-    required String? addressId,
-    required String paymentLabel,
-  }) async {
-    final orderRef = _ordersRef(userId).doc();
-    final itemSnap = await _itemsRef(userId).get();
-    final b = _db.batch();
-    b.set(orderRef, {
-      'status': 'processing',
-      'createdAt': FieldValue.serverTimestamp(),
-      'subtotal': subtotal,
-      'shipping': shipping,
-      'tax': tax,
-      'total': total,
-      'addressId': addressId,
-      'address': {
-        'street': addressStreet,
-        'city': addressCity,
-        'state': addressState,
-        'zipCode': addressZip,
-      },
-      'paymentLabel': paymentLabel,
-      'items': lines
-          .map(
-            (e) => {
-              'productId': e.productId,
-              'name': e.name,
-              'imageUrl': e.imageUrl,
-              'unitPrice': e.unitPrice,
-              'quantity': e.quantity,
-              'size': e.size,
-              'colorLabel': e.colorLabel,
-            },
-          )
-          .toList(),
-    });
-    for (final d in itemSnap.docs) {
-      b.delete(d.reference);
-    }
-    await b.commit();
-    return orderRef.id;
+    await batch.commit();
   }
 }

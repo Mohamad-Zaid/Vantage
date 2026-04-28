@@ -1,13 +1,36 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vantage/core/constants/app_constants.dart';
 import 'package:vantage/features/addresses/domain/entities/address_entity.dart';
 import 'package:vantage/features/addresses/domain/usecases/watch_user_addresses_usecase.dart';
 import 'package:vantage/features/cart/domain/entities/cart_line_entity.dart';
-import 'package:vantage/features/cart/domain/usecases/place_order_usecase.dart';
-import 'package:vantage/features/cart/presentation/cubit/cart_state.dart';
+import 'package:vantage/features/cart/domain/entities/cart_totals.dart';
+import 'package:vantage/features/cart/domain/services/cart_calculation_service.dart';
+import 'package:vantage/features/orders/domain/usecases/place_order_usecase.dart';
 
 import 'checkout_state.dart';
+
+String? _resolveCheckoutSelectedAddressId({
+  required List<AddressEntity> addresses,
+  required String? userPickedAddressId,
+}) {
+  if (addresses.isEmpty) return null;
+  if (userPickedAddressId != null &&
+      addresses.any((address) => address.id == userPickedAddressId)) {
+    return userPickedAddressId;
+  }
+  return addresses.first.id;
+}
+
+String _checkoutPaymentLabel(CheckoutState previousState) =>
+    previousState is CheckoutReady
+        ? previousState.paymentLabel
+        : CheckoutUiConstants.defaultPaymentMask;
+
+bool _checkoutIsPlacing(CheckoutState previousState) =>
+    previousState is CheckoutReady ? previousState.isPlacing : false;
 
 final class CheckoutCubit extends Cubit<CheckoutState> {
   CheckoutCubit({
@@ -24,13 +47,16 @@ final class CheckoutCubit extends Cubit<CheckoutState> {
       return;
     }
     _lines = List<CartLineEntity>.unmodifiable(initialLines);
-    _totals = cartTotalsForLines(_lines);
+    _totals = const CartCalculationService().calculate(_lines);
     emit(const CheckoutLoading());
     _sub = _watchAddresses(userId).listen(
       _onAddresses,
-      onError: (Object e, StackTrace st) {
+      onError: (Object error, StackTrace stackTrace) {
         if (isClosed) return;
-        emit(CheckoutError(e.toString()));
+        debugPrint(
+          'CheckoutCubit._watchAddresses subscription failed: $error\n$stackTrace',
+        );
+        emit(CheckoutError(error.toString()));
       },
     );
   }
@@ -44,33 +70,21 @@ final class CheckoutCubit extends Cubit<CheckoutState> {
   late final CartTotals _totals;
   String? _userPickedAddressId;
 
-  void _onAddresses(List<AddressEntity> list) {
+  void _onAddresses(List<AddressEntity> addresses) {
     if (isClosed) return;
     if (state is CheckoutPlaced) return;
-    String? nextId;
-    if (list.isEmpty) {
-      nextId = null;
-    } else {
-      if (_userPickedAddressId != null &&
-          list.any((a) => a.id == _userPickedAddressId)) {
-        nextId = _userPickedAddressId;
-      } else {
-        nextId = list.first.id;
-      }
-    }
-    final prev = state;
-    final paymentLabel = prev is CheckoutReady
-        ? prev.paymentLabel
-        : '**** 4187';
-    final isPlacing = prev is CheckoutReady ? prev.isPlacing : false;
+    final previousState = state;
     emit(
       CheckoutReady(
         lines: _lines,
         totals: _totals,
-        addresses: list,
-        selectedAddressId: nextId,
-        paymentLabel: paymentLabel,
-        isPlacing: isPlacing,
+        addresses: addresses,
+        selectedAddressId: _resolveCheckoutSelectedAddressId(
+          addresses: addresses,
+          userPickedAddressId: _userPickedAddressId,
+        ),
+        paymentLabel: _checkoutPaymentLabel(previousState),
+        isPlacing: _checkoutIsPlacing(previousState),
       ),
     );
   }
@@ -78,38 +92,40 @@ final class CheckoutCubit extends Cubit<CheckoutState> {
   void selectAddress(String addressId) {
     if (isClosed) return;
     _userPickedAddressId = addressId;
-    final s = state;
-    if (s is! CheckoutReady) return;
-    emit(s.copyWith(selectedAddressId: addressId));
+    final currentState = state;
+    if (currentState is! CheckoutReady) return;
+    emit(currentState.copyWith(selectedAddressId: addressId));
   }
 
-  // ignore: use_setters_to_change_properties
   void onPaymentSectionTap() {
-    // TODO(shop): real payment method picker.
+    throw UnimplementedError(
+      'onPaymentSectionTap: payment method picker not yet implemented',
+    );
   }
 
   Future<void> submitOrder() async {
     if (isClosed) return;
-    final s = state;
-    if (s is! CheckoutReady) return;
-    final addr = s.selectedAddress;
+    final readyState = state;
+    if (readyState is! CheckoutReady) return;
+    final addr = readyState.selectedAddress;
     if (addr == null) return;
-    emit(s.copyWith(isPlacing: true));
+    emit(readyState.copyWith(isPlacing: true));
     if (isClosed) return;
     try {
       final orderId = await _placeOrder(
         userId: _userId,
-        lines: s.lines,
+        lines: readyState.lines,
         address: addr,
-        paymentLabel: s.paymentLabel,
+        paymentLabel: readyState.paymentLabel,
       );
       if (isClosed) return;
       emit(CheckoutPlaced(orderId));
-    } catch (e) {
+    } catch (error, stackTrace) {
+      debugPrint('CheckoutCubit.submitOrder failed: $error\n$stackTrace');
       if (isClosed) return;
-      emit(CheckoutError(e.toString()));
+      emit(CheckoutError(error.toString()));
       if (isClosed) return;
-      emit(s.copyWith(isPlacing: false));
+      emit(readyState.copyWith(isPlacing: false));
     }
   }
 

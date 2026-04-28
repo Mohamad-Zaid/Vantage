@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/translations/locale_keys.g.dart';
 import 'package:vantage/core/widgets/filter_option_tile.dart';
@@ -46,9 +47,9 @@ void showCartAddressPickerSheet(
                     showClear: false,
                     onClose: () => Navigator.of(ctx).pop(),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: AppSpacing.xl),
                   for (var i = 0; i < addresses.length; i++) ...[
-                    if (i > 0) const SizedBox(height: 16),
+                    if (i > 0) const SizedBox(height: AppSpacing.lg),
                     FilterOptionTile(
                       label: addresses[i].singleLinePreview,
                       selected: currentlySelectedId == addresses[i].id,
@@ -59,7 +60,7 @@ void showCartAddressPickerSheet(
                       },
                     ),
                   ],
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.lg),
                   _AddAddressRow(
                     onTap: () {
                       Navigator.of(ctx).pop();
@@ -106,7 +107,7 @@ class _AddAddressRow extends StatelessWidget {
             child: Row(
               children: [
                 Icon(Icons.add_circle_outline_rounded, color: primary, size: 24),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSpacing.md),
                 Expanded(
                   child: Text(
                     LocaleKeys.address_addNew.tr(),

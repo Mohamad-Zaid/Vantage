@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'package:vantage/core/catalog/shop_categories_catalog.dart';
 import 'package:vantage/core/domain/entities/product_entity.dart';
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/translations/locale_keys.g.dart';
 import 'package:vantage/core/widgets/vantage_primary_button.dart';
@@ -59,8 +60,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
   // Overlay-local when the sticky CTA/overlay can’t provide a [RenderBox] yet.
   Offset _fallbackAddToBagAnchor(BuildContext context) {
-    final s = MediaQuery.sizeOf(context);
-    return Offset(s.width / 2, s.height - 40);
+    final screenSize = MediaQuery.sizeOf(context);
+    return Offset(
+      screenSize.width / 2,
+      screenSize.height - AppSpacing.toolbarIconSlot,
+    );
   }
 
   String _categoryLabel(String categoryId) {
@@ -73,15 +77,15 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
   String _localizedColorName(int colorIndex) {
     final opts = ProductDetailColorOptions.options;
-    final i = colorIndex.clamp(0, opts.length - 1);
-    return switch (opts[i].localeSuffix) {
+    final safeColorIndex = colorIndex.clamp(0, opts.length - 1);
+    return switch (opts[safeColorIndex].localeSuffix) {
       'Orange' => LocaleKeys.productDetail_colorOrange.tr(),
       'Black' => LocaleKeys.productDetail_colorBlack.tr(),
       'Red' => LocaleKeys.productDetail_colorRed.tr(),
       'Yellow' => LocaleKeys.productDetail_colorYellow.tr(),
       'Blue' => LocaleKeys.productDetail_colorBlue.tr(),
       'Lemon' => LocaleKeys.productDetail_colorLemon.tr(),
-      _ => opts[i].localeSuffix,
+      _ => opts[safeColorIndex].localeSuffix,
     };
   }
 
@@ -166,7 +170,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         ),
                       ),
                       SliverPadding(
-                        padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
+                        padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
                         sliver: SliverList(
                           delegate: SliverChildListDelegate([
                             Text(
@@ -178,10 +182,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                 height: 1.25,
                               ),
                             ),
-                            const SizedBox(height: 8),
+                            const SizedBox(height: AppSpacing.sm),
                             Wrap(
-                              spacing: 8,
-                              runSpacing: 6,
+                              spacing: AppSpacing.sm,
+                              runSpacing: AppSpacing.xs,
                               crossAxisAlignment: WrapCrossAlignment.center,
                               children: [
                                 Text(
@@ -201,7 +205,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                       size: 18,
                                       color: starColor,
                                     ),
-                                    const SizedBox(width: 4),
+                                    const SizedBox(width: AppSpacing.xxs),
                                     Text(
                                       LocaleKeys.productDetail_ratingReviewLine
                                           .tr(
@@ -223,12 +227,13 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                 if (onSale && salePct != null)
                                   Container(
                                     padding: const EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                      vertical: 4,
+                                      horizontal: AppSpacing.inset10,
+                                      vertical: AppSpacing.xxs,
                                     ),
                                     decoration: BoxDecoration(
                                       color: const Color(0xFFE53935),
-                                      borderRadius: BorderRadius.circular(6),
+                                      borderRadius:
+                                          BorderRadius.circular(AppSpacing.xs),
                                     ),
                                     child: Text(
                                       '-$salePct%',
@@ -242,7 +247,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                   ),
                               ],
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: AppSpacing.lg),
                             Text(
                               product.description,
                               style: GoogleFonts.nunitoSans(
@@ -252,7 +257,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                 height: 1.6,
                               ),
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: AppSpacing.lg),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.baseline,
                               textBaseline: TextBaseline.alphabetic,
@@ -267,7 +272,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                   ),
                                 ),
                                 if (onSale) ...[
-                                  const SizedBox(width: 8),
+                                  const SizedBox(width: AppSpacing.sm),
                                   Text(
                                     _formatUsd(product.compareAtPrice!),
                                     style: GoogleFonts.nunitoSans(
@@ -281,7 +286,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                 ],
                               ],
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: AppSpacing.lg),
                             ProductDetailOptionRow(
                               label: LocaleKeys.productDetail_size.tr(),
                               onTap: () => _openSizeSheet(context, state),
@@ -296,16 +301,16 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                       fontWeight: FontWeight.w700,
                                     ),
                                   ),
-                                  const SizedBox(width: 8),
+                                  const SizedBox(width: AppSpacing.sm),
                                   Icon(
                                     Icons.keyboard_arrow_down_rounded,
                                     color: titleColor,
-                                    size: 24,
+                                    size: AppSpacing.xl,
                                   ),
                                 ],
                               ),
                             ),
-                            const SizedBox(height: 12),
+                            const SizedBox(height: AppSpacing.md),
                             ProductDetailOptionRow(
                               label: LocaleKeys.productDetail_color.tr(),
                               onTap: () => _openColorSheet(context, state),
@@ -326,23 +331,23 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(width: 8),
+                                  const SizedBox(width: AppSpacing.sm),
                                   Icon(
                                     Icons.keyboard_arrow_down_rounded,
                                     color: titleColor,
-                                    size: 24,
+                                    size: AppSpacing.xl,
                                   ),
                                 ],
                               ),
                             ),
-                            const SizedBox(height: 12),
+                            const SizedBox(height: AppSpacing.md),
                             ProductDetailQuantityRow(
                               label: LocaleKeys.productDetail_quantity.tr(),
                               quantity: state.quantity,
                               onIncrement: _cubit.incrementQuantity,
                               onDecrement: _cubit.decrementQuantity,
                             ),
-                            const SizedBox(height: 24),
+                            const SizedBox(height: AppSpacing.xl),
                             Text(
                               LocaleKeys.productDetail_shippingReturns.tr(),
                               style: GoogleFonts.gabarito(
@@ -352,7 +357,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                 height: 1.25,
                               ),
                             ),
-                            const SizedBox(height: 8),
+                            const SizedBox(height: AppSpacing.sm),
                             Text(
                               LocaleKeys.productDetail_shippingReturnsBody.tr(),
                               style: GoogleFonts.nunitoSans(
@@ -362,7 +367,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                 height: 1.6,
                               ),
                             ),
-                            const SizedBox(height: 25),
+                            const SizedBox(height: AppSpacing.inset25),
                           ]),
                         ),
                       ),
@@ -370,11 +375,16 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.screenHorizontal,
+                    0,
+                    AppSpacing.screenHorizontal,
+                    AppSpacing.lg,
+                  ),
                   child: VantagePrimaryButton(
                     key: _addToBagKey,
                     label: LocaleKeys.productDetail_addToBag.tr(),
-                    horizontalPadding: 24,
+                    horizontalPadding: AppSpacing.screenHorizontal,
                     onPressed: () async {
                       final cart = context.read<CartCubit>();
                       await cart.addProductLine(

@@ -2,9 +2,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/translations/locale_keys.g.dart';
-import 'package:vantage/features/cart/presentation/cubit/cart_state.dart';
+import 'package:vantage/features/cart/domain/entities/cart_totals.dart';
 import 'package:vantage/features/cart/presentation/widgets/cart_money.dart';
 
 class CartSummaryBlock extends StatelessWidget {
@@ -30,14 +31,14 @@ class CartSummaryBlock extends StatelessWidget {
           labelColor: subC,
           valueColor: titleC,
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: AppSpacing.xs),
         _Row(
           label: LocaleKeys.cart_shipping.tr(),
           value: CartMoney.usd(totals.shipping),
           labelColor: subC,
           valueColor: titleC,
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: AppSpacing.xs),
         _Row(
           label: LocaleKeys.cart_tax.tr(),
           value: CartMoney.usd(totals.tax),

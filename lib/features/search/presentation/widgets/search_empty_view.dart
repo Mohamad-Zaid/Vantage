@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/generated/assets.dart';
 import 'package:vantage/router/app_router.dart';
@@ -30,7 +31,7 @@ class SearchEmptyView extends StatelessWidget {
                 color: Color(0xFFFFC107),
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppSpacing.xl),
             Text(
               "Sorry, we couldn't find any matching result for your Search.",
               textAlign: TextAlign.center,
@@ -40,7 +41,7 @@ class SearchEmptyView extends StatelessWidget {
                 fontWeight: FontWeight.w400,
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppSpacing.xl),
             GestureDetector(
               onTap: () => context.router.push(const ShopByCategoriesRoute()),
               child: Container(

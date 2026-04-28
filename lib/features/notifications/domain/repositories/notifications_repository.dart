@@ -4,4 +4,6 @@ abstract class NotificationsRepository {
   Future<List<NotificationEntity>> getNotifications();
 
   Future<void> deleteNotification(String id);
+
+  Future<void> appendNotification(NotificationEntity notification);
 }

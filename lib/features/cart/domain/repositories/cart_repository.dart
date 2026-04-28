@@ -19,20 +19,4 @@ abstract interface class CartRepository {
   Future<void> removeLine(String userId, String lineId);
 
   Future<void> clearCart(String userId);
-
-  // Writes the order and clears the cart in one flow; returns the new order id.
-  Future<String> placeOrder(
-    String userId, {
-    required List<CartLineEntity> lines,
-    required double subtotal,
-    required double shipping,
-    required double tax,
-    required double total,
-    required String addressStreet,
-    required String addressCity,
-    required String addressState,
-    required String addressZip,
-    required String? addressId,
-    required String paymentLabel,
-  });
 }

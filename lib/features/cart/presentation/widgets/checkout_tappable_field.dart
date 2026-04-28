@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 
 class CheckoutTappableField extends StatelessWidget {
@@ -50,7 +51,7 @@ class CheckoutTappableField extends StatelessWidget {
                         fontWeight: FontWeight.w400,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: AppSpacing.xxs),
                     Text(
                       valueText,
                       maxLines: 2,

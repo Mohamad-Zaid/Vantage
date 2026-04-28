@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/translations/locale_keys.g.dart';
 import 'package:vantage/core/widgets/vantage_circle_back_button.dart';
@@ -41,11 +42,11 @@ final class _AddressFormPageState extends State<AddressFormPage> {
   void _trySeedFromCubit() {
     final id = widget.addressId;
     if (id == null || _seeded) return;
-    final s = context.read<AddressesCubit>().state;
-    if (s is! AddressesLoaded) return;
-    for (final a in s.addresses) {
-      if (a.id == id) {
-        _seedFrom(a);
+    final addressesState = context.read<AddressesCubit>().state;
+    if (addressesState is! AddressesLoaded) return;
+    for (final address in addressesState.addresses) {
+      if (address.id == id) {
+        _seedFrom(address);
         return;
       }
     }
@@ -72,9 +73,9 @@ final class _AddressFormPageState extends State<AddressFormPage> {
   Future<void> _onSave(BuildContext context) async {
     final street = _street.text.trim();
     final city = _city.text.trim();
-    final st = _state.text.trim();
+    final stateText = _state.text.trim();
     final zip = _zip.text.trim();
-    if (street.isEmpty || city.isEmpty || st.isEmpty || zip.isEmpty) {
+    if (street.isEmpty || city.isEmpty || stateText.isEmpty || zip.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(LocaleKeys.address_fillAllFields.tr())),
       );
@@ -86,7 +87,7 @@ final class _AddressFormPageState extends State<AddressFormPage> {
       id: id,
       street: street,
       city: city,
-      state: st,
+      state: stateText,
       zipCode: zip,
     );
 
@@ -127,7 +128,12 @@ final class _AddressFormPageState extends State<AddressFormPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.screenHorizontal,
+                  AppSpacing.sm,
+                  AppSpacing.screenHorizontal,
+                  0,
+                ),
                 child: Row(
                   children: [
                     VantageCircleBackButton(
@@ -146,14 +152,16 @@ final class _AddressFormPageState extends State<AddressFormPage> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 40),
+                    const SizedBox(width: AppSpacing.toolbarIconSlot),
                   ],
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.xl),
               Expanded(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.screenHorizontal,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -164,7 +172,7 @@ final class _AddressFormPageState extends State<AddressFormPage> {
                         hintColor: hintColor,
                         textColor: textColor,
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: AppSpacing.md),
                       _LabeledField(
                         controller: _city,
                         hintText: LocaleKeys.address_city.tr(),
@@ -172,7 +180,7 @@ final class _AddressFormPageState extends State<AddressFormPage> {
                         hintColor: hintColor,
                         textColor: textColor,
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: AppSpacing.md),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -185,7 +193,7 @@ final class _AddressFormPageState extends State<AddressFormPage> {
                               textColor: textColor,
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: AppSpacing.md),
                           Expanded(
                             child: _LabeledField(
                               controller: _zip,
@@ -203,7 +211,12 @@ final class _AddressFormPageState extends State<AddressFormPage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.screenHorizontal,
+                  AppSpacing.sm,
+                  AppSpacing.screenHorizontal,
+                  AppSpacing.lg,
+                ),
                 child: SizedBox(
                   width: double.infinity,
                   child: FilledButton(
@@ -211,7 +224,9 @@ final class _AddressFormPageState extends State<AddressFormPage> {
                     style: FilledButton.styleFrom(
                       backgroundColor: VantageColors.authPrimaryPurple,
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: AppSpacing.lg,
+                      ),
                       shape: const StadiumBorder(),
                       elevation: 0,
                     ),
@@ -261,10 +276,12 @@ final class _LabeledField extends StatelessWidget {
         filled: true,
         fillColor: fieldFill,
         isDense: true,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.inset18,
+        ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppSpacing.sm),
           borderSide: BorderSide.none,
         ),
         hintStyle: GoogleFonts.nunitoSans(

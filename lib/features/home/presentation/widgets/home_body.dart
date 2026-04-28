@@ -13,6 +13,7 @@ import 'home_categories_section.dart';
 import 'package:vantage/core/widgets/vantage_search_field.dart';
 import 'home_shelves_section.dart';
 import 'home_top_bar.dart';
+import 'package:vantage/core/theme/app_spacing.dart';
 
 // Stateful for search [TextEditingController] lifecycle.
 class HomeBody extends StatefulWidget {
@@ -72,7 +73,7 @@ class _HomeBodyState extends State<HomeBody> {
                             context.router.push(const CartRoute());
                           },
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: AppSpacing.md),
                         GestureDetector(
                           onTap: _openSearch,
                           behavior: HitTestBehavior.opaque,
@@ -81,9 +82,9 @@ class _HomeBodyState extends State<HomeBody> {
                                 controller: _searchController),
                           ),
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: AppSpacing.md),
                         const HomeCategoriesSection(),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: AppSpacing.md),
                       ],
                     ),
                   ),

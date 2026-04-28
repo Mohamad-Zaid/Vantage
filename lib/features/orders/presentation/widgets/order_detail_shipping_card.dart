@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:vantage/core/theme/app_spacing.dart';
 
 class OrderDetailShippingCard extends StatelessWidget {
   const OrderDetailShippingCard({
@@ -35,7 +36,7 @@ class OrderDetailShippingCard extends StatelessWidget {
                 color: textColor,
               ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: AppSpacing.xxs),
             Text(
               phone,
               style: GoogleFonts.nunitoSans(

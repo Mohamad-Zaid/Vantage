@@ -1,8 +1,7 @@
-import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 abstract interface class AuthRemoteDataSource {
@@ -47,7 +46,7 @@ final class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   })  : _auth = firebaseAuth ?? FirebaseAuth.instance,
         _googleSignIn = googleSignIn ?? GoogleSignIn.instance,
         _storage = storage ?? FirebaseStorage.instance,
-        _fire = firestore ?? FirebaseFirestore.instance;
+        _firestore = firestore ?? FirebaseFirestore.instance;
 
   static const _kUserProfiles = 'user_profiles';
   static const _kPhone = 'phone';
@@ -55,7 +54,7 @@ final class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final FirebaseAuth _auth;
   final GoogleSignIn _googleSignIn;
   final FirebaseStorage _storage;
-  final FirebaseFirestore _fire;
+  final FirebaseFirestore _firestore;
 
   @override
   Stream<User?> get authStateChanges => _auth.userChanges();
@@ -118,8 +117,9 @@ final class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
     try {
       await _googleSignIn.signOut();
-    } catch (_) {
+    } catch (e, st) {
       // Google may already be signed out; still surface success from Firebase.
+      debugPrint('AuthRemoteDataSourceImpl.signOut (Google) failed: $e\n$st');
     }
   }
 
@@ -134,11 +134,11 @@ final class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<String?> getProfilePhone(String uid) async {
-    final snap = await _fire.collection(_kUserProfiles).doc(uid).get();
-    final p = snap.data()?[_kPhone];
-    if (p is! String) return null;
-    final t = p.trim();
-    return t.isEmpty ? null : t;
+    final snap = await _firestore.collection(_kUserProfiles).doc(uid).get();
+    final rawPhone = snap.data()?[_kPhone];
+    if (rawPhone is! String) return null;
+    final trimmedPhone = rawPhone.trim();
+    return trimmedPhone.isEmpty ? null : trimmedPhone;
   }
 
   @override
@@ -164,7 +164,7 @@ final class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       await user.updatePhotoURL(url);
     }
     await user.updateDisplayName(displayName);
-    final doc = _fire.collection(_kUserProfiles).doc(user.uid);
+    final doc = _firestore.collection(_kUserProfiles).doc(user.uid);
     final trimmed = phone.trim();
     if (trimmed.isEmpty) {
       await doc.set(

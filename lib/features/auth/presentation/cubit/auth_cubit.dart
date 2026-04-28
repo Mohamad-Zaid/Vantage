@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vantage/core/translations/locale_keys.g.dart';
 
@@ -53,7 +54,8 @@ final class AuthCubit extends Cubit<AuthState> {
         email: email,
         password: password,
       );
-    } catch (e) {
+    } catch (e, st) {
+      debugPrint('AuthCubit.signInWithEmailAndPassword: $e\n$st');
       if (isClosed) return;
       _emitSafe(AuthError(_mapAuthError(e.toString())));
     }
@@ -73,7 +75,8 @@ final class AuthCubit extends Cubit<AuthState> {
         firstName: firstName,
         lastName: lastName,
       );
-    } catch (e) {
+    } catch (e, st) {
+      debugPrint('AuthCubit.signUpWithEmailAndPassword: $e\n$st');
       if (isClosed) return;
       _emitSafe(AuthError(_mapAuthError(e.toString())));
     }
@@ -83,7 +86,8 @@ final class AuthCubit extends Cubit<AuthState> {
     _emitSafe(const AuthLoading());
     try {
       await _signInWithGoogle();
-    } catch (e) {
+    } catch (e, st) {
+      debugPrint('AuthCubit.signInWithGoogle: $e\n$st');
       if (isClosed) return;
       _emitSafe(AuthError(_mapAuthError(e.toString())));
     }

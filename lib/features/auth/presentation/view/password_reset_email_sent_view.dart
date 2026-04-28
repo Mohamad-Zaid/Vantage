@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/translations/locale_keys.g.dart';
 import 'package:vantage/generated/assets.dart';
@@ -40,7 +41,7 @@ class PasswordResetEmailSentPage extends StatelessWidget {
                     height: 100,
                     fit: BoxFit.contain,
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: AppSpacing.xl),
                   Text(
                     LocaleKeys.auth_passwordResetEmailSent.tr(),
                     textAlign: TextAlign.center,
@@ -50,7 +51,7 @@ class PasswordResetEmailSentPage extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: AppSpacing.xl),
                   FilledButton(
                     onPressed: () {
                       context.router.replaceAll([const SignInRoute()]);

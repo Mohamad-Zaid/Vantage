@@ -1,9 +1,9 @@
+import 'package:vantage/core/auth/current_user_provider.dart';
+
 import '../entities/user_entity.dart';
 
-abstract interface class AuthRepository {
-  Stream<UserEntity?> get authStateChanges;
-
-  // Firebase may already have [currentUser] while profile load is still in flight.
+abstract interface class AuthRepository implements CurrentUserProvider {
+  // Firebase may already have [currentUser] while the Firestore profile is still loading.
   bool get hasSessionHint;
 
   Future<UserEntity?> getCurrentUser();

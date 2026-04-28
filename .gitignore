@@ -55,4 +55,5 @@ ios/Runner/GoogleService-Info.plist
 
 # Cursor IDE
 .cursor/
+evaluation_rules.md
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/widgets/filter_option_tile.dart';
 import 'package:vantage/core/widgets/filter_sheet_header.dart';
@@ -51,7 +52,7 @@ class _SortBottomSheet extends StatelessWidget {
                     context, (value: null, cleared: true)),
                 onClose: () => Navigator.pop(context, null),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.xl),
               for (final opt in _options) ...[
                 FilterOptionTile(
                   label: opt.label,
@@ -61,7 +62,7 @@ class _SortBottomSheet extends StatelessWidget {
                     (value: opt.value as SortBy?, cleared: false),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.lg),
               ],
             ],
           ),

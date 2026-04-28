@@ -8,6 +8,7 @@ import 'package:vantage/core/widgets/directional_arrow_icon.dart';
 import 'package:vantage/generated/assets.dart';
 
 import '../../domain/entities/order_summary_entity.dart';
+import 'package:vantage/core/theme/app_spacing.dart';
 
 class OrderSummaryTile extends StatelessWidget {
   const OrderSummaryTile({
@@ -49,7 +50,7 @@ class OrderSummaryTile extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppSpacing.md),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,7 +66,7 @@ class OrderSummaryTile extends StatelessWidget {
                         color: titleColor,
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: AppSpacing.inset2),
                     Text(
                       LocaleKeys.orders_itemsCount.tr(
                         namedArgs: {'count': '${order.itemCount}'},

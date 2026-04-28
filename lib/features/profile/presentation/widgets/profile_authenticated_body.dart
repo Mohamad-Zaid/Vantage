@@ -14,6 +14,7 @@ import 'profile_labeled_action_row.dart';
 import 'profile_menu_row.dart';
 import 'profile_settings_bottom_sheets.dart';
 import 'profile_sign_out_button.dart';
+import 'package:vantage/core/theme/app_spacing.dart';
 
 class ProfileAuthenticatedBody extends StatelessWidget {
   const ProfileAuthenticatedBody({
@@ -78,29 +79,29 @@ class ProfileAuthenticatedBody extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         children: [
-          const SizedBox(height: 24),
+          const SizedBox(height: AppSpacing.xl),
           ProfileAvatar(photoUrl: user.photoUrl),
-          const SizedBox(height: 32),
+          const SizedBox(height: AppSpacing.xxl),
           ProfileInfoCard(
             name: displayName,
             email: email,
             phone: user.phone,
             onEdit: () => router.push(const EditProfileRoute()),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: AppSpacing.xl),
           for (var i = 0; i < preferenceRows.length; i++) ...[
-            if (i > 0) const SizedBox(height: 8),
+            if (i > 0) const SizedBox(height: AppSpacing.sm),
             preferenceRows[i],
           ],
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.sm),
           for (var i = 0; i < menuRows.length; i++) ...[
-            if (i > 0) const SizedBox(height: 8),
+            if (i > 0) const SizedBox(height: AppSpacing.sm),
             menuRows[i],
           ],
-          const SizedBox(height: 32),
+          const SizedBox(height: AppSpacing.xxl),
           ProfileSignOutButton(onTap: onSignOutTap),
           ProfileDeleteAccountButton(onTap: onDeleteAccountTap),
-          const SizedBox(height: 24),
+          const SizedBox(height: AppSpacing.xl),
         ],
       ),
     );

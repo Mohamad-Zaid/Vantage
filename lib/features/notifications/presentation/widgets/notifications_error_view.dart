@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import 'package:vantage/core/translations/locale_keys.g.dart';
+import 'package:vantage/core/theme/app_spacing.dart';
 
 class NotificationsErrorView extends StatelessWidget {
   const NotificationsErrorView({
@@ -26,7 +27,7 @@ class NotificationsErrorView extends StatelessWidget {
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.lg),
             FilledButton(
               onPressed: onRetry,
               child: Text(LocaleKeys.common_retry.tr()),

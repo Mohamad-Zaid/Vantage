@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'package:vantage/core/catalog/shop_categories_catalog.dart';
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/translations/locale_keys.g.dart';
 import 'package:vantage/core/widgets/vantage_circle_back_button.dart';
@@ -65,7 +66,7 @@ class _CategoryDetailPageState extends State<CategoryDetailPage> {
                 VantageCircleBackButton(
                   onPressed: () => context.router.maybePop(),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.lg),
                 BlocBuilder<CategoryProductsCubit, CategoryProductsState>(
                   builder: (context, state) {
                     final subtitle = switch (state) {
@@ -86,7 +87,7 @@ class _CategoryDetailPageState extends State<CategoryDetailPage> {
                     );
                   },
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.lg),
                 Expanded(
                   child:
                       BlocBuilder<CategoryProductsCubit, CategoryProductsState>(
@@ -105,7 +106,7 @@ class _CategoryDetailPageState extends State<CategoryDetailPage> {
                                   textAlign: TextAlign.center,
                                   style: TextStyle(color: titleColor),
                                 ),
-                                const SizedBox(height: 12),
+                                const SizedBox(height: AppSpacing.md),
                                 TextButton(
                                   onPressed: () => _cubit.load(widget.categoryId),
                                   child: Text(LocaleKeys.common_retry.tr()),

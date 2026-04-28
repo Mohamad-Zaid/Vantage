@@ -140,6 +140,7 @@ abstract class  LocaleKeys {
   static const notifications_title = 'notifications.title';
   static const notifications_emptyTitle = 'notifications.emptyTitle';
   static const notifications_exploreCategories = 'notifications.exploreCategories';
+  static const notifications_orderPlacedMessage = 'notifications.orderPlacedMessage';
   static const notifications = 'notifications';
   static const orders_title = 'orders.title';
   static const orders_emptyTitle = 'orders.emptyTitle';

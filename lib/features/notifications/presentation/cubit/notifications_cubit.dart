@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/usecases/delete_notification_usecase.dart';
@@ -42,7 +43,8 @@ final class NotificationsCubit extends Cubit<NotificationsState> {
       } else {
         emit(NotificationsLoaded(list));
       }
-    } catch (e) {
+    } catch (e, st) {
+      debugPrint('NotificationsCubit.removeNotification: $e\n$st');
       if (isClosed) return;
       emit(NotificationsError(e.toString()));
     }

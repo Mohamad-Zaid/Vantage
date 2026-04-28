@@ -1,8 +1,9 @@
 import 'package:equatable/equatable.dart';
 
+import 'package:vantage/core/constants/app_constants.dart';
 import 'package:vantage/features/addresses/domain/entities/address_entity.dart';
 import 'package:vantage/features/cart/domain/entities/cart_line_entity.dart';
-import 'package:vantage/features/cart/presentation/cubit/cart_state.dart';
+import 'package:vantage/features/cart/domain/entities/cart_totals.dart';
 
 sealed class CheckoutState extends Equatable {
   const CheckoutState();
@@ -30,7 +31,7 @@ final class CheckoutReady extends CheckoutState {
     required this.totals,
     required this.addresses,
     this.selectedAddressId,
-    this.paymentLabel = '**** 4187',
+    this.paymentLabel = CheckoutUiConstants.defaultPaymentMask,
     this.isPlacing = false,
   });
 
@@ -44,8 +45,8 @@ final class CheckoutReady extends CheckoutState {
   AddressEntity? get selectedAddress {
     final id = selectedAddressId;
     if (id == null) return null;
-    for (final a in addresses) {
-      if (a.id == id) return a;
+    for (final address in addresses) {
+      if (address.id == id) return address;
     }
     return null;
   }

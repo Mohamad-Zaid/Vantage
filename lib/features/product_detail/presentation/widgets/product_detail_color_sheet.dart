@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/translations/locale_keys.g.dart';
 import 'package:vantage/core/widgets/filter_sheet_header.dart';
@@ -65,9 +66,9 @@ class ProductDetailColorSheet extends StatelessWidget {
                   showClear: false,
                   onClose: () => Navigator.of(context).maybePop(),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: AppSpacing.xl),
                 for (var i = 0; i < options.length; i++) ...[
-                  if (i > 0) const SizedBox(height: 16),
+                  if (i > 0) const SizedBox(height: AppSpacing.lg),
                   _ColorOptionRow(
                     label: trProductDetailColorName(options[i].localeSuffix),
                     swatch: options[i].swatch,
@@ -163,7 +164,7 @@ class _ColorOptionRow extends StatelessWidget {
                   ),
                 ),
                 if (selected) ...[
-                  const SizedBox(width: 8),
+                  const SizedBox(width: AppSpacing.sm),
                   Icon(Icons.check_rounded, color: onPrimary, size: 20),
                 ],
               ],

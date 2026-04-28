@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/translations/locale_keys.g.dart';
 import 'package:vantage/core/widgets/vantage_circle_back_button.dart';
@@ -51,14 +52,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Future<void> _pickPhoto() async {
-    final x = await _imagePicker.pickImage(
+    final pickedImage = await _imagePicker.pickImage(
       source: ImageSource.gallery,
       maxWidth: 1024,
       maxHeight: 1024,
       imageQuality: 85,
     );
-    if (x == null || !mounted) return;
-    final bytes = await x.readAsBytes();
+    if (pickedImage == null || !mounted) return;
+    final bytes = await pickedImage.readAsBytes();
     if (!mounted) return;
     _cubit.setNewPhotoBytes(bytes);
   }
@@ -82,10 +83,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
             return;
           }
           if (state is EditProfileReady) {
-            final k = state.saveErrorLocaleKey;
-            if (k != null && context.mounted) {
+            final saveErrorLocaleKey = state.saveErrorLocaleKey;
+            if (saveErrorLocaleKey != null && context.mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(k.tr())),
+                SnackBar(content: Text(saveErrorLocaleKey.tr())),
               );
               _cubit.clearSaveError();
             }
@@ -95,11 +96,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
           listenWhen: (p, c) => c is EditProfileReady && p is EditProfileLoading,
           listener: (context, state) {
             if (state is! EditProfileReady || _seeded) return;
-            final u = state.user;
-            _nameCtrl.text = (u.displayName?.trim().isNotEmpty ?? false)
-                ? u.displayName!.trim()
-                : (u.email.isNotEmpty ? u.email.split('@').first : '');
-            _phoneCtrl.text = u.phone?.trim() ?? '';
+            final currentUser = state.user;
+            _nameCtrl.text =
+                (currentUser.displayName?.trim().isNotEmpty ?? false)
+                    ? currentUser.displayName!.trim()
+                    : (currentUser.email.isNotEmpty
+                        ? currentUser.email.split('@').first
+                        : '');
+            _phoneCtrl.text = currentUser.phone?.trim() ?? '';
             _seeded = true;
           },
           child: BlocBuilder<EditProfileCubit, EditProfileState>(
@@ -171,7 +175,7 @@ class _EditProfileScaffold extends StatelessWidget {
         : VantageColors.profileTextSecondaryLight;
     final fieldFill =
         isDark ? VantageColors.authBgDark2 : VantageColors.homeAudiencePillLight;
-    final u = state.user;
+    final currentUser = state.user;
     final saving = state.saving;
 
     InputDecoration dec(String label, {String? hint}) {
@@ -234,7 +238,7 @@ class _EditProfileScaffold extends StatelessWidget {
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              const SizedBox(height: 28),
+              const SizedBox(height: AppSpacing.inset28),
               Center(
                 child: Column(
                   children: [
@@ -252,9 +256,10 @@ class _EditProfileScaffold extends StatelessWidget {
                                       Uint8List.fromList(state.newPhotoBytes!),
                                       fit: BoxFit.cover,
                                     )
-                                  : (u.photoUrl != null && u.photoUrl!.isNotEmpty
+                                  : (currentUser.photoUrl != null &&
+                                          currentUser.photoUrl!.isNotEmpty
                                       ? CachedNetworkImage(
-                                          imageUrl: u.photoUrl!,
+                                          imageUrl: currentUser.photoUrl!,
                                           fit: BoxFit.cover,
                                         )
                                       : ColoredBox(
@@ -294,7 +299,7 @@ class _EditProfileScaffold extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppSpacing.sm),
                     TextButton(
                       onPressed: saving ? null : onPickPhoto,
                       child: Text(
@@ -308,7 +313,7 @@ class _EditProfileScaffold extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.lg),
               Text(
                 LocaleKeys.profile_emailReadonly.tr(),
                 style: GoogleFonts.nunitoSans(
@@ -316,16 +321,16 @@ class _EditProfileScaffold extends StatelessWidget {
                   fontSize: 12,
                 ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: AppSpacing.xxs),
               Text(
-                u.email,
+                currentUser.email,
                 style: GoogleFonts.nunitoSans(
                   color: titleC,
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: AppSpacing.inset20),
               TextFormField(
                 controller: nameCtrl,
                 enabled: !saving,
@@ -341,7 +346,7 @@ class _EditProfileScaffold extends StatelessWidget {
                   return null;
                 },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.lg),
               TextFormField(
                 controller: phoneCtrl,
                 enabled: !saving,
@@ -355,13 +360,13 @@ class _EditProfileScaffold extends StatelessWidget {
                   hint: LocaleKeys.profile_phoneOptional.tr(),
                 ),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: AppSpacing.xxl),
               VantagePrimaryButton(
                 label: LocaleKeys.profile_saveProfile.tr(),
                 isLoading: saving,
                 onPressed: saving ? null : onSave,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.xl),
             ],
           ),
         ),

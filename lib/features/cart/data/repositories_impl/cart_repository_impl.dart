@@ -1,3 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
+
+import 'package:vantage/core/errors/domain_exceptions.dart';
 import 'package:vantage/features/cart/data/datasources/cart_remote_datasource.dart';
 import 'package:vantage/features/cart/domain/entities/cart_line_entity.dart';
 import 'package:vantage/features/cart/domain/repositories/cart_repository.dart';
@@ -9,7 +13,13 @@ final class CartRepositoryImpl implements CartRepository {
 
   @override
   Stream<List<CartLineEntity>> watchCart(String userId) {
-    return _remote.watchItems(userId).map((list) => list);
+    return _remote.watchItems(userId).handleError((Object e, StackTrace st) {
+      debugPrint('CartRepositoryImpl.watchCart failed: $e\n$st');
+      if (e is FirebaseException) {
+        throw RepositoryException(e.message ?? 'Firebase error', cause: e);
+      }
+      throw e;
+    });
   }
 
   @override
@@ -22,62 +32,51 @@ final class CartRepositoryImpl implements CartRepository {
     required String size,
     required String colorLabel,
     required int quantityDelta,
-  }) {
-    return _remote.addOrUpdateLine(
-      userId,
-      productId: productId,
-      name: name,
-      imageUrl: imageUrl,
-      unitPrice: unitPrice,
-      size: size,
-      colorLabel: colorLabel,
-      quantityDelta: quantityDelta,
-    );
+  }) async {
+    try {
+      await _remote.addOrUpdateLine(
+        userId,
+        productId: productId,
+        name: name,
+        imageUrl: imageUrl,
+        unitPrice: unitPrice,
+        size: size,
+        colorLabel: colorLabel,
+        quantityDelta: quantityDelta,
+      );
+    } on FirebaseException catch (e, st) {
+      debugPrint('CartRepositoryImpl.addOrUpdateLine failed: $e\n$st');
+      throw RepositoryException(e.message ?? 'Firebase error', cause: e);
+    }
   }
 
   @override
-  Future<void> setQuantity(String userId, String lineId, int quantity) {
-    return _remote.setLineQuantity(userId, lineId, quantity);
+  Future<void> setQuantity(String userId, String lineId, int quantity) async {
+    try {
+      await _remote.setLineQuantity(userId, lineId, quantity);
+    } on FirebaseException catch (e, st) {
+      debugPrint('CartRepositoryImpl.setQuantity failed: $e\n$st');
+      throw RepositoryException(e.message ?? 'Firebase error', cause: e);
+    }
   }
 
   @override
-  Future<void> removeLine(String userId, String lineId) {
-    return _remote.deleteLine(userId, lineId);
+  Future<void> removeLine(String userId, String lineId) async {
+    try {
+      await _remote.deleteLine(userId, lineId);
+    } on FirebaseException catch (e, st) {
+      debugPrint('CartRepositoryImpl.removeLine failed: $e\n$st');
+      throw RepositoryException(e.message ?? 'Firebase error', cause: e);
+    }
   }
 
   @override
-  Future<void> clearCart(String userId) {
-    return _remote.clearAll(userId);
-  }
-
-  @override
-  Future<String> placeOrder(
-    String userId, {
-    required List<CartLineEntity> lines,
-    required double subtotal,
-    required double shipping,
-    required double tax,
-    required double total,
-    required String addressStreet,
-    required String addressCity,
-    required String addressState,
-    required String addressZip,
-    required String? addressId,
-    required String paymentLabel,
-  }) {
-    return _remote.createOrder(
-      userId,
-      lines: lines,
-      subtotal: subtotal,
-      shipping: shipping,
-      tax: tax,
-      total: total,
-      addressStreet: addressStreet,
-      addressCity: addressCity,
-      addressState: addressState,
-      addressZip: addressZip,
-      addressId: addressId,
-      paymentLabel: paymentLabel,
-    );
+  Future<void> clearCart(String userId) async {
+    try {
+      await _remote.clearAll(userId);
+    } on FirebaseException catch (e, st) {
+      debugPrint('CartRepositoryImpl.clearCart failed: $e\n$st');
+      throw RepositoryException(e.message ?? 'Firebase error', cause: e);
+    }
   }
 }

@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/translations/locale_keys.g.dart';
 import 'package:vantage/core/widgets/vantage_loading_indicator.dart';
@@ -95,31 +96,31 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                         iconColor: backIcon,
                       ),
                       OrderDetailTimelineSection(detail: detail, isDark: isDark),
-                      const SizedBox(height: 32),
+                      const SizedBox(height: AppSpacing.xxl),
                       OrderDetailSectionTitle(
                         titleKey: LocaleKeys.orderDetail_orderItems,
                         color: titleColor,
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: AppSpacing.md),
                       OrderDetailItemsCard(
                         lineItems: detail.lineItems,
                         itemCount: detail.itemCount,
                         cardBg: cardBg,
                         titleColor: titleColor,
                       ),
-                      const SizedBox(height: 32),
+                      const SizedBox(height: AppSpacing.xxl),
                       OrderDetailSectionTitle(
                         titleKey: LocaleKeys.orderDetail_shippingDetails,
                         color: titleColor,
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: AppSpacing.md),
                       OrderDetailShippingCard(
                         address: detail.address,
                         phone: detail.phone,
                         cardBg: cardBg,
                         textColor: titleColor,
                       ),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: AppSpacing.xl),
                     ],
                   ),
                 ),

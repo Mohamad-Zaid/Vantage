@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/translations/locale_keys.g.dart';
 import 'package:vantage/generated/assets.dart';
@@ -38,7 +39,7 @@ class NotificationsEmptyView extends StatelessWidget {
                         color: titleColor.withValues(alpha: 0.45),
                       ),
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: AppSpacing.xl),
                     Text(
                       LocaleKeys.notifications_emptyTitle.tr(),
                       textAlign: TextAlign.center,
@@ -48,7 +49,7 @@ class NotificationsEmptyView extends StatelessWidget {
                         color: titleColor,
                       ),
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: AppSpacing.xl),
                     FilledButton(
                       style: FilledButton.styleFrom(
                         backgroundColor: VantageColors.authPrimaryPurple,

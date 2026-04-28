@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/translations/locale_keys.g.dart';
 import 'package:vantage/core/widgets/vantage_primary_button.dart';
@@ -35,7 +36,7 @@ class OrderPlacedPage extends StatelessWidget {
                 color: topBg,
                 child: Center(
                   child: Padding(
-                    padding: const EdgeInsets.all(24),
+                    padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
                     child: Image.asset(
                       Assets.imageCartOrderPlaced,
                       fit: BoxFit.contain,
@@ -47,7 +48,9 @@ class OrderPlacedPage extends StatelessWidget {
             Expanded(
               flex: 3,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 32),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.xxl,
+                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -60,7 +63,7 @@ class OrderPlacedPage extends StatelessWidget {
                         fontWeight: FontWeight.w800,
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: AppSpacing.md),
                     Text(
                       LocaleKeys.cart_orderPlacedSub.tr(),
                       textAlign: TextAlign.center,
@@ -71,7 +74,7 @@ class OrderPlacedPage extends StatelessWidget {
                         height: 1.5,
                       ),
                     ),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: AppSpacing.xxl),
                     VantagePrimaryButton(
                       label: LocaleKeys.cart_seeOrderDetails.tr(),
                       onPressed: () {
@@ -82,7 +85,7 @@ class OrderPlacedPage extends StatelessWidget {
                         ]);
                       },
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: AppSpacing.md),
                     TextButton(
                       onPressed: () =>
                           context.router.replaceAll([const NavigationRoute()]),

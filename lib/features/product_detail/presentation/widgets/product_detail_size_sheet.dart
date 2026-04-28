@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/translations/locale_keys.g.dart';
 import 'package:vantage/core/widgets/filter_option_tile.dart';
@@ -44,9 +45,9 @@ class ProductDetailSizeSheet extends StatelessWidget {
                   showClear: false,
                   onClose: () => Navigator.of(context).maybePop(),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: AppSpacing.xl),
                 for (var i = 0; i < sizes.length; i++) ...[
-                  if (i > 0) const SizedBox(height: 16),
+                  if (i > 0) const SizedBox(height: AppSpacing.lg),
                   FilterOptionTile(
                     label: sizes[i],
                     selected: sizes[i] == selected,

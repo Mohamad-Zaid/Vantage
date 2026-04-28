@@ -1,68 +1,91 @@
 import 'dart:async';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vantage/features/auth/domain/entities/user_entity.dart';
-import 'package:vantage/features/auth/domain/usecases/get_current_user_usecase.dart';
-import 'package:vantage/features/auth/domain/usecases/watch_auth_state_usecase.dart';
-import 'package:vantage/features/cart/domain/cart_pricing.dart';
+import 'package:flutter/foundation.dart';
+import 'package:vantage/core/auth/auth_aware_cubit.dart';
+import 'package:vantage/core/cubits/cubit_error_handler.dart';
+import 'package:vantage/core/auth/current_user_provider.dart';
+import 'package:vantage/core/domain/entities/user_entity.dart';
+import 'package:vantage/core/events/domain_event_bus.dart';
 import 'package:vantage/features/cart/domain/entities/cart_line_entity.dart';
+import 'package:vantage/features/cart/domain/services/cart_calculation_service.dart';
 import 'package:vantage/features/cart/domain/usecases/add_cart_line_usecase.dart';
 import 'package:vantage/features/cart/domain/usecases/clear_cart_usecase.dart';
 import 'package:vantage/features/cart/domain/usecases/remove_cart_line_usecase.dart';
 import 'package:vantage/features/cart/domain/usecases/update_cart_line_quantity_usecase.dart';
 import 'package:vantage/features/cart/domain/usecases/watch_cart_usecase.dart';
+import 'package:vantage/features/orders/domain/events/order_placed_event.dart';
 
 import 'cart_state.dart';
 
-final class CartCubit extends Cubit<CartState> {
+final class CartCubit extends AuthAwareCubit<CartState>
+    with CubitErrorHandler<CartState> {
   CartCubit({
-    required WatchAuthStateUseCase watchAuth,
+    required CurrentUserProvider authProvider,
+    required DomainEventBus domainEvents,
     required WatchCartUseCase watchCart,
     required AddCartLineUseCase addLine,
     required UpdateCartLineQuantityUseCase updateQty,
     required RemoveCartLineUseCase removeLine,
     required ClearCartUseCase clearCart,
-    required GetCurrentUserUseCase getCurrentUser,
-  })  : _watchAuth = watchAuth,
+  })  : _domainEvents = domainEvents,
         _watchCart = watchCart,
         _addLine = addLine,
         _updateQty = updateQty,
         _removeLine = removeLine,
         _clearCart = clearCart,
-        _getCurrentUser = getCurrentUser,
-        super(const CartInitial()) {
+        super(const CartInitial(), authProvider) {
     emit(const CartLoading());
-    _authSub = _watchAuth().listen(_onAuth);
+    _orderPlacedSub = _domainEvents.events
+        .where((event) => event is OrderPlacedEvent)
+        .cast<OrderPlacedEvent>()
+        .listen(_onOrderPlaced);
   }
 
-  final WatchAuthStateUseCase _watchAuth;
+  final DomainEventBus _domainEvents;
   final WatchCartUseCase _watchCart;
   final AddCartLineUseCase _addLine;
   final UpdateCartLineQuantityUseCase _updateQty;
   final RemoveCartLineUseCase _removeLine;
   final ClearCartUseCase _clearCart;
-  final GetCurrentUserUseCase _getCurrentUser;
+  final _calculationService = const CartCalculationService();
 
-  StreamSubscription<UserEntity?>? _authSub;
   StreamSubscription<List<CartLineEntity>>? _cartSub;
-
+  late final StreamSubscription<OrderPlacedEvent> _orderPlacedSub;
   CartLoaded? _lastLoaded;
-  void _setLoaded(CartLoaded s) {
-    _lastLoaded = s;
+  void _setLoaded(CartLoaded loadedState) => _lastLoaded = loadedState;
+
+  void _onOrderPlaced(OrderPlacedEvent event) {
+    if (isClosed) return;
+    final user = currentUser;
+    if (user == null || user.id != event.userId) return;
+    unawaited(_clearCartAfterOrder(event.userId));
   }
 
-  void _onAuth(UserEntity? u) {
+  Future<void> _clearCartAfterOrder(String userId) async {
+    try {
+      await _clearCart(userId);
+    } catch (error, stackTrace) {
+      debugPrint('CartCubit._clearCartAfterOrder failed: $error\n$stackTrace');
+    }
+  }
+
+  @override
+  void onAuthStateChanged(UserEntity? user) {
     _cartSub?.cancel();
     _cartSub = null;
-    if (u == null) {
+    if (user == null) {
       emit(const CartNeedSignIn());
       return;
     }
-    _cartSub = _watchCart(u.id).listen(
+    _cartSub = _watchCart(user.id).listen(
       _onLines,
-      onError: (Object e, StackTrace st) {
-        emit(CartError(e.toString()));
-        if (_lastLoaded != null) emit(_lastLoaded!);
+      onError: (Object error, StackTrace stackTrace) {
+        debugPrint(
+          'CartCubit._watchCart subscription failed: $error\n$stackTrace',
+        );
+        emit(CartError(error.toString()));
+        final previousLoaded = _lastLoaded;
+        if (previousLoaded != null) emit(previousLoaded);
       },
     );
   }
@@ -73,23 +96,15 @@ final class CartCubit extends Cubit<CartState> {
       emit(const CartEmpty());
       return;
     }
-    var sub = 0.0;
-    var itemCount = 0;
-    for (final l in lines) {
-      sub += l.lineTotal;
-      itemCount += l.quantity;
-    }
-    final t = sub + CartPricing.shipping + CartPricing.tax;
-    final s = CartLoaded(
+    final totals = _calculationService.calculate(lines);
+    final itemCount = lines.fold(0, (sum, line) => sum + line.quantity);
+    final loadedState = CartLoaded(
       lines: List<CartLineEntity>.unmodifiable(lines),
-      subtotal: sub,
-      shipping: CartPricing.shipping,
-      tax: CartPricing.tax,
-      total: t,
+      totals: totals,
       itemCount: itemCount,
     );
-    _setLoaded(s);
-    emit(s);
+    _setLoaded(loadedState);
+    emit(loadedState);
   }
 
   Future<void> addProductLine({
@@ -101,91 +116,114 @@ final class CartCubit extends Cubit<CartState> {
     required String colorLabel,
     int quantity = 1,
   }) async {
-    final u = await _getCurrentUser();
-    if (u == null) {
+    final user = currentUser;
+    if (user == null) {
       emit(const CartNeedSignIn());
       return;
     }
-    try {
-      await _addLine(
-        u.id,
-        productId: productId,
-        name: name,
-        imageUrl: imageUrl,
-        unitPrice: unitPrice,
-        size: size,
-        colorLabel: colorLabel,
-        quantityDelta: quantity,
-      );
-    } catch (e) {
-      emit(CartError(e.toString()));
-      if (_lastLoaded != null) emit(_lastLoaded!);
-    }
+    await runGuardedMutation(
+      'CartCubit.addProductLine',
+      () async {
+        await _addLine(
+          user.id,
+          productId: productId,
+          name: name,
+          imageUrl: imageUrl,
+          unitPrice: unitPrice,
+          size: size,
+          colorLabel: colorLabel,
+          quantityDelta: quantity,
+        );
+      },
+      onError: (Object error) {
+        emit(CartError(error.toString()));
+        final previousLoaded = _lastLoaded;
+        if (previousLoaded != null) emit(previousLoaded);
+      },
+    );
   }
 
   Future<void> setLineQuantity(String lineId, int quantity) async {
-    final u = await _getCurrentUser();
-    if (u == null) {
+    final user = currentUser;
+    if (user == null) {
       emit(const CartNeedSignIn());
       return;
     }
     if (isClosed) return;
-    try {
-      await _updateQty(u.id, lineId, quantity);
-    } catch (e) {
-      emit(CartError(e.toString()));
-      if (_lastLoaded != null) emit(_lastLoaded!);
-    }
+    await runGuardedMutation(
+      'CartCubit.setLineQuantity',
+      () async {
+        await _updateQty(user.id, lineId, quantity);
+      },
+      onError: (Object error) {
+        emit(CartError(error.toString()));
+        final previousLoaded = _lastLoaded;
+        if (previousLoaded != null) emit(previousLoaded);
+      },
+    );
   }
 
   Future<void> removeLine(String lineId) async {
-    final u = await _getCurrentUser();
-    if (u == null) {
+    final user = currentUser;
+    if (user == null) {
       emit(const CartNeedSignIn());
       return;
     }
     if (isClosed) return;
-    try {
-      await _removeLine(u.id, lineId);
-    } catch (e) {
-      emit(CartError(e.toString()));
-      if (_lastLoaded != null) emit(_lastLoaded!);
-    }
+    await runGuardedMutation(
+      'CartCubit.removeLine',
+      () async {
+        await _removeLine(user.id, lineId);
+      },
+      onError: (Object error) {
+        emit(CartError(error.toString()));
+        final previousLoaded = _lastLoaded;
+        if (previousLoaded != null) emit(previousLoaded);
+      },
+    );
   }
 
   Future<void> clearAll() async {
-    final u = await _getCurrentUser();
-    if (u == null) {
+    final user = currentUser;
+    if (user == null) {
       emit(const CartNeedSignIn());
       return;
     }
     if (isClosed) return;
-    try {
-      await _clearCart(u.id);
-    } catch (e) {
-      emit(CartError(e.toString()));
-      if (_lastLoaded != null) emit(_lastLoaded!);
-    }
+    await runGuardedMutation(
+      'CartCubit.clearAll',
+      () async {
+        await _clearCart(user.id);
+      },
+      onError: (Object error) {
+        emit(CartError(error.toString()));
+        final previousLoaded = _lastLoaded;
+        if (previousLoaded != null) emit(previousLoaded);
+      },
+    );
   }
 
-  // Re-subscribe to the Firestore cart stream (pull-to-refresh).
   Future<void> refresh() async {
-    final u = await _getCurrentUser();
-    if (u == null) return;
-    await _cartSub?.cancel();
-    _cartSub = _watchCart(u.id).listen(
+    final user = currentUser;
+    if (user == null) return;
+    _cartSub?.cancel();
+    _cartSub = _watchCart(user.id).listen(
       _onLines,
-      onError: (Object e, StackTrace st) {
-        emit(CartError(e.toString()));
-        if (_lastLoaded != null) emit(_lastLoaded!);
+      onError: (Object error, StackTrace stackTrace) {
+        debugPrint(
+          'CartCubit.refresh subscription failed: $error\n$stackTrace',
+        );
+        emit(CartError(error.toString()));
+        final previousLoaded = _lastLoaded;
+        if (previousLoaded != null) emit(previousLoaded);
       },
     );
   }
 
   @override
   Future<void> close() {
-    _authSub?.cancel();
     _cartSub?.cancel();
+    _orderPlacedSub.cancel();
     return super.close();
   }
 }

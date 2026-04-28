@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/translations/locale_keys.g.dart';
 import 'package:vantage/generated/assets.dart';
@@ -58,7 +59,7 @@ class HomeCategoriesSection extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSpacing.lg),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -120,7 +121,7 @@ class HomeCategoryChip extends StatelessWidget {
                 shape: const OvalBorder(),
               ),
             ),
-            const SizedBox(height: 5),
+            const SizedBox(height: AppSpacing.inset5),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 2),
               child: Text(

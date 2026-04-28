@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/translations/locale_keys.g.dart';
 import 'package:vantage/core/widgets/vantage_circle_back_button.dart';
@@ -35,7 +36,12 @@ class WishlistListDetailPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.screenHorizontal,
+                AppSpacing.sm,
+                AppSpacing.screenHorizontal,
+                0,
+              ),
               child: Row(
                 children: [
                   VantageCircleBackButton(
@@ -43,10 +49,10 @@ class WishlistListDetailPage extends StatelessWidget {
                   ),
                   Expanded(
                     child: BlocBuilder<FavoritesCubit, FavoritesState>(
-                      buildWhen: (p, c) =>
-                          c is FavoritesLoaded ||
-                          c is FavoritesLoading ||
-                          c is FavoritesError,
+                      buildWhen: (previous, current) =>
+                          current is FavoritesLoaded ||
+                          current is FavoritesLoading ||
+                          current is FavoritesError,
                       builder: (context, state) {
                         final count = switch (state) {
                           FavoritesLoaded(:final products) => products.length,
@@ -68,11 +74,11 @@ class WishlistListDetailPage extends StatelessWidget {
                       },
                     ),
                   ),
-                  const SizedBox(width: 40),
+                  const SizedBox(width: AppSpacing.toolbarIconSlot),
                 ],
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppSpacing.xl),
             Expanded(
               child: BlocBuilder<FavoritesCubit, FavoritesState>(
                 builder: (context, state) {
@@ -90,7 +96,7 @@ class WishlistListDetailPage extends StatelessWidget {
                             child: Center(
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
-                                  horizontal: 24,
+                                  horizontal: AppSpacing.screenHorizontal,
                                 ),
                                 child: Text(
                                   '${LocaleKeys.common_error.tr()}\n$message',
@@ -140,8 +146,8 @@ class WishlistListDetailPage extends StatelessWidget {
                           if (n is! ScrollUpdateNotification) {
                             return false;
                           }
-                          final m = n.metrics;
-                          if (m.pixels < m.maxScrollExtent - 160) {
+                          final metrics = n.metrics;
+                          if (metrics.pixels < metrics.maxScrollExtent - 160) {
                             return false;
                           }
                           if (!hasMore || isLoadingMore) {
@@ -160,14 +166,14 @@ class WishlistListDetailPage extends StatelessWidget {
                             slivers: [
                               SliverPadding(
                                 padding: const EdgeInsets.symmetric(
-                                  horizontal: 24,
+                                  horizontal: AppSpacing.screenHorizontal,
                                 ),
                                 sliver: SliverGrid(
                                   gridDelegate:
                                       const SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 2,
-                                    mainAxisSpacing: 20,
-                                    crossAxisSpacing: 20,
+                                    mainAxisSpacing: AppSpacing.inset20,
+                                    crossAxisSpacing: AppSpacing.inset20,
                                     mainAxisExtent:
                                         VantageProductCard.gridMainAxisExtent,
                                   ),
@@ -194,9 +200,13 @@ class WishlistListDetailPage extends StatelessWidget {
                               if (isLoadingMore)
                                 const SliverToBoxAdapter(
                                   child: Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 20),
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: AppSpacing.inset20,
+                                    ),
                                     child: Center(
-                                      child: VantageLoadingIndicator(size: 24),
+                                      child: VantageLoadingIndicator(
+                                        size: AppSpacing.xl,
+                                      ),
                                     ),
                                   ),
                                 ),

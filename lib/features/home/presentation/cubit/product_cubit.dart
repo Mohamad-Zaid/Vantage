@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/usecases/get_home_shelves_usecase.dart';
@@ -31,7 +32,8 @@ final class ProductCubit extends Cubit<ProductState> {
           newInByCategory: shelves.newInByCategory,
         ));
       }
-    } catch (e) {
+    } catch (e, st) {
+      debugPrint('ProductCubit.loadProducts: $e\n$st');
       if (isClosed) return;
       emit(ProductError(e.toString()));
     }
@@ -47,7 +49,8 @@ final class ProductCubit extends Cubit<ProductState> {
       } else {
         emit(ProductLoaded(topSelling: products, newInByCategory: const []));
       }
-    } catch (e) {
+    } catch (e, st) {
+      debugPrint('ProductCubit.loadProductsByCategory: $e\n$st');
       if (isClosed) return;
       emit(ProductError(e.toString()));
     }
