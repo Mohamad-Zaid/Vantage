@@ -2,11 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:vantage/core/auth/auth_aware_cubit.dart';
+import 'package:vantage/core/domain/failures/failure.dart';
 import 'package:vantage/core/cubits/cubit_error_handler.dart';
 import 'package:vantage/core/auth/current_user_provider.dart';
 import 'package:vantage/core/domain/entities/user_entity.dart';
 import 'package:vantage/core/events/domain_event_bus.dart';
 import 'package:vantage/features/cart/domain/entities/cart_line_entity.dart';
+import 'package:vantage/features/cart/domain/entities/cart_line_input.dart';
 import 'package:vantage/features/cart/domain/services/cart_calculation_service.dart';
 import 'package:vantage/features/cart/domain/usecases/add_cart_line_usecase.dart';
 import 'package:vantage/features/cart/domain/usecases/clear_cart_usecase.dart';
@@ -83,7 +85,7 @@ final class CartCubit extends AuthAwareCubit<CartState>
         debugPrint(
           'CartCubit._watchCart subscription failed: $error\n$stackTrace',
         );
-        emit(CartError(error.toString()));
+        emit(CartError(UnknownFailure(error.toString())));
         final previousLoaded = _lastLoaded;
         if (previousLoaded != null) emit(previousLoaded);
       },
@@ -126,17 +128,19 @@ final class CartCubit extends AuthAwareCubit<CartState>
       () async {
         await _addLine(
           user.id,
-          productId: productId,
-          name: name,
-          imageUrl: imageUrl,
-          unitPrice: unitPrice,
-          size: size,
-          colorLabel: colorLabel,
-          quantityDelta: quantity,
+          CartLineInput(
+            productId: productId,
+            name: name,
+            imageUrl: imageUrl,
+            unitPrice: unitPrice,
+            size: size,
+            colorLabel: colorLabel,
+            quantityDelta: quantity,
+          ),
         );
       },
       onError: (Object error) {
-        emit(CartError(error.toString()));
+        emit(CartError(UnknownFailure(error.toString())));
         final previousLoaded = _lastLoaded;
         if (previousLoaded != null) emit(previousLoaded);
       },
@@ -156,7 +160,7 @@ final class CartCubit extends AuthAwareCubit<CartState>
         await _updateQty(user.id, lineId, quantity);
       },
       onError: (Object error) {
-        emit(CartError(error.toString()));
+        emit(CartError(UnknownFailure(error.toString())));
         final previousLoaded = _lastLoaded;
         if (previousLoaded != null) emit(previousLoaded);
       },
@@ -176,7 +180,7 @@ final class CartCubit extends AuthAwareCubit<CartState>
         await _removeLine(user.id, lineId);
       },
       onError: (Object error) {
-        emit(CartError(error.toString()));
+        emit(CartError(UnknownFailure(error.toString())));
         final previousLoaded = _lastLoaded;
         if (previousLoaded != null) emit(previousLoaded);
       },
@@ -196,7 +200,7 @@ final class CartCubit extends AuthAwareCubit<CartState>
         await _clearCart(user.id);
       },
       onError: (Object error) {
-        emit(CartError(error.toString()));
+        emit(CartError(UnknownFailure(error.toString())));
         final previousLoaded = _lastLoaded;
         if (previousLoaded != null) emit(previousLoaded);
       },
@@ -213,7 +217,7 @@ final class CartCubit extends AuthAwareCubit<CartState>
         debugPrint(
           'CartCubit.refresh subscription failed: $error\n$stackTrace',
         );
-        emit(CartError(error.toString()));
+        emit(CartError(UnknownFailure(error.toString())));
         final previousLoaded = _lastLoaded;
         if (previousLoaded != null) emit(previousLoaded);
       },

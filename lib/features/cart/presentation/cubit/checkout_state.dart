@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import 'package:vantage/core/constants/app_constants.dart';
+import 'package:vantage/core/domain/failures/failure.dart';
 import 'package:vantage/features/addresses/domain/entities/address_entity.dart';
 import 'package:vantage/features/cart/domain/entities/cart_line_entity.dart';
 import 'package:vantage/features/cart/domain/entities/cart_totals.dart';
@@ -87,12 +88,12 @@ final class CheckoutReady extends CheckoutState {
 }
 
 final class CheckoutError extends CheckoutState {
-  const CheckoutError(this.message);
+  const CheckoutError(this.failure);
 
-  final String message;
+  final Failure failure;
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [failure];
 }
 
 final class CheckoutPlaced extends CheckoutState {

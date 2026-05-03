@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:vantage/core/domain/failures/failure.dart';
 import '../../domain/entities/faq_entity.dart';
 
 sealed class SupportState extends Equatable {
@@ -30,10 +31,10 @@ final class SupportEmpty extends SupportState {
 }
 
 final class SupportError extends SupportState {
-  const SupportError(this.message);
+  const SupportError(this.failure);
 
-  final String message;
+  final Failure failure;
 
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [failure];
 }

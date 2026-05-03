@@ -75,26 +75,31 @@ final class VantageApp extends StatelessWidget {
             locale: context.locale,
             builder: (context, child) {
               // Cart, wishlist, and addresses can require sign-in from deep in the stack; surface prompts here so any route has a Scaffold.
-              return BlocListener<CartCubit, CartState>(
-                listenWhen: (prev, curr) => curr is CartNeedSignIn,
-                listener: (context, state) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(LocaleKeys.cart_signInToCart.tr()),
-                    ),
-                  );
-                },
-                child: BlocListener<FavoritesCubit, FavoritesState>(
-                  listenWhen: (prev, curr) => curr is FavoritesNeedSignIn,
-                  listener: (context, state) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content:
-                            Text(LocaleKeys.wishlist_signInToFavorite.tr()),
-                      ),
-                    );
-                  },
-                  child: BlocListener<AddressesCubit, AddressesState>(
+              return MultiBlocListener(
+                listeners: [
+                  BlocListener<CartCubit, CartState>(
+                    listenWhen: (prev, curr) => curr is CartNeedSignIn,
+                    listener: (context, state) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(LocaleKeys.cart_signInToCart.tr()),
+                        ),
+                      );
+                    },
+                  ),
+                  BlocListener<FavoritesCubit, FavoritesState>(
+                    listenWhen: (prev, curr) => curr is FavoritesNeedSignIn,
+                    listener: (context, state) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            LocaleKeys.wishlist_signInToFavorite.tr(),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  BlocListener<AddressesCubit, AddressesState>(
                     listenWhen: (prev, curr) => curr is AddressesNeedSignIn,
                     listener: (context, state) {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -103,9 +108,9 @@ final class VantageApp extends StatelessWidget {
                         ),
                       );
                     },
-                    child: child ?? const SizedBox.shrink(),
                   ),
-                ),
+                ],
+                child: child ?? const SizedBox.shrink(),
               );
             },
           );

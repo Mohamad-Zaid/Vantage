@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vantage/core/domain/failures/failure.dart';
 
 import '../../domain/usecases/get_support_faqs_usecase.dart';
 import 'support_state.dart';
@@ -24,7 +25,7 @@ final class SupportCubit extends Cubit<SupportState> {
       }
     } catch (e) {
       if (isClosed) return;
-      emit(SupportError(e.toString()));
+      emit(SupportError(UnknownFailure(e.toString())));
     }
   }
 }

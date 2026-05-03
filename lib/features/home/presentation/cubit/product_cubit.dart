@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vantage/core/domain/failures/failure.dart';
 
 import '../../domain/usecases/get_home_shelves_usecase.dart';
 import '../../domain/usecases/get_products_by_category_usecase.dart';
@@ -35,7 +36,7 @@ final class ProductCubit extends Cubit<ProductState> {
     } catch (e, st) {
       debugPrint('ProductCubit.loadProducts: $e\n$st');
       if (isClosed) return;
-      emit(ProductError(e.toString()));
+      emit(ProductError(UnknownFailure(e.toString())));
     }
   }
 
@@ -52,7 +53,7 @@ final class ProductCubit extends Cubit<ProductState> {
     } catch (e, st) {
       debugPrint('ProductCubit.loadProductsByCategory: $e\n$st');
       if (isClosed) return;
-      emit(ProductError(e.toString()));
+      emit(ProductError(UnknownFailure(e.toString())));
     }
   }
 }

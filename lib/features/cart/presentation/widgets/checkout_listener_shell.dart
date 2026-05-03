@@ -7,6 +7,7 @@ import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/widgets/vantage_loading_indicator.dart';
 import 'package:vantage/core/widgets/vantage_success_burst_overlay.dart';
 import 'package:vantage/features/cart/presentation/cubit/checkout_cubit.dart';
+import 'package:vantage/core/presentation/failure_display_ext.dart';
 import 'package:vantage/features/cart/presentation/cubit/checkout_state.dart';
 import 'package:vantage/features/cart/presentation/widgets/checkout_page_body.dart';
 import 'package:vantage/router/app_router.dart';
@@ -57,7 +58,7 @@ class _CheckoutListenerShellState extends State<CheckoutListenerShell> {
             );
           } else if (checkoutState is CheckoutError) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(checkoutState.message)),
+              SnackBar(content: Text(checkoutState.failure.displayMessage)),
             );
           }
         },

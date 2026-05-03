@@ -10,6 +10,7 @@ import 'package:vantage/core/translations/locale_keys.g.dart';
 import 'package:vantage/di/injection.dart';
 import 'package:vantage/router/app_router.dart';
 
+import '../auth_error_ext.dart';
 import '../cubit/password_reset_cubit.dart';
 import '../cubit/password_reset_state.dart';
 
@@ -146,7 +147,7 @@ class _ForgotPasswordViewState extends State<_ForgotPasswordView> {
               listener: (context, state) {
                 if (state is PasswordResetFailure) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.message)),
+                    SnackBar(content: Text(state.code.toLocalizedMessage())),
                   );
                 }
                 if (state is PasswordResetSuccess) {

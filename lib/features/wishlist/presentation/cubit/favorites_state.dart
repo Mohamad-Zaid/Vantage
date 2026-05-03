@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import 'package:vantage/core/domain/entities/product_entity.dart';
+import 'package:vantage/core/domain/failures/failure.dart';
 
 sealed class FavoritesState extends Equatable {
   const FavoritesState();
@@ -40,10 +41,10 @@ final class FavoritesNeedSignIn extends FavoritesState {
 }
 
 final class FavoritesError extends FavoritesState {
-  const FavoritesError(this.message);
+  const FavoritesError(this.failure);
 
-  final String message;
+  final Failure failure;
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [failure];
 }

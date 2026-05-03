@@ -2,8 +2,15 @@ import 'package:equatable/equatable.dart';
 
 import 'package:vantage/core/domain/entities/product_entity.dart';
 
-final class ProductDetailState extends Equatable {
-  const ProductDetailState({
+sealed class ProductDetailState extends Equatable {
+  const ProductDetailState();
+
+  @override
+  List<Object?> get props => [];
+}
+
+final class ProductDetailReady extends ProductDetailState {
+  const ProductDetailReady({
     required this.product,
     required this.selectedSize,
     required this.selectedColorIndex,
@@ -15,13 +22,13 @@ final class ProductDetailState extends Equatable {
   final int selectedColorIndex;
   final int quantity;
 
-  ProductDetailState copyWith({
+  ProductDetailReady copyWith({
     ProductEntity? product,
     String? selectedSize,
     int? selectedColorIndex,
     int? quantity,
   }) {
-    return ProductDetailState(
+    return ProductDetailReady(
       product: product ?? this.product,
       selectedSize: selectedSize ?? this.selectedSize,
       selectedColorIndex: selectedColorIndex ?? this.selectedColorIndex,

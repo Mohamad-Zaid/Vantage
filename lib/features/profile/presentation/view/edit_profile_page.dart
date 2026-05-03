@@ -39,7 +39,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   void initState() {
     super.initState();
-    _cubit = EditProfileCubit(sl(), sl());
+    _cubit = sl<EditProfileCubit>();
     unawaited(_cubit.load());
   }
 

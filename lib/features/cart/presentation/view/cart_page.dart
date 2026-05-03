@@ -11,6 +11,7 @@ import 'package:vantage/core/widgets/vantage_circle_back_button.dart';
 import 'package:vantage/core/widgets/vantage_loading_indicator.dart';
 import 'package:vantage/core/widgets/vantage_primary_button.dart';
 import 'package:vantage/core/constants/cart_constants.dart';
+import 'package:vantage/core/presentation/failure_display_ext.dart';
 import 'package:vantage/features/cart/presentation/cubit/cart_cubit.dart';
 import 'package:vantage/features/cart/presentation/cubit/cart_state.dart'
     show
@@ -70,10 +71,10 @@ class CartPage extends StatelessWidget {
                   ),
                 ],
               ),
-              CartError(:final message) => Center(
+              CartError(:final failure) => Center(
                 child: Padding(
                   padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
-                  child: Text(message),
+                  child: Text(failure.displayMessage),
                 ),
               ),
               CartLoaded() => _CartWithItems(

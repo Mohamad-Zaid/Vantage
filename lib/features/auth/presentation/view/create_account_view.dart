@@ -12,6 +12,7 @@ import 'package:vantage/di/injection.dart';
 import 'package:vantage/generated/assets.dart';
 import 'package:vantage/router/app_router.dart';
 
+import '../auth_error_ext.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 
@@ -38,6 +39,13 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   late final AuthCubit _authCubit;
   late final _PasswordVisibilityCubit _passwordVisibilityCubit;
 
+  final _formKey = GlobalKey<FormState>();
+  final _authSubmitKey = GlobalKey();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -49,41 +57,6 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   void dispose() {
     _authCubit.close();
     _passwordVisibilityCubit.close();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _CreateAccountView(
-      authCubit: _authCubit,
-      passwordVisibilityCubit: _passwordVisibilityCubit,
-    );
-  }
-}
-
-class _CreateAccountView extends StatefulWidget {
-  const _CreateAccountView({
-    required this.authCubit,
-    required this.passwordVisibilityCubit,
-  });
-
-  final AuthCubit authCubit;
-  final _PasswordVisibilityCubit passwordVisibilityCubit;
-
-  @override
-  State<_CreateAccountView> createState() => _CreateAccountViewState();
-}
-
-class _CreateAccountViewState extends State<_CreateAccountView> {
-  final _formKey = GlobalKey<FormState>();
-  final _authSubmitKey = GlobalKey();
-  final _firstNameController = TextEditingController();
-  final _lastNameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-
-  @override
-  void dispose() {
     _firstNameController.dispose();
     _lastNameController.dispose();
     _emailController.dispose();
@@ -93,7 +66,7 @@ class _CreateAccountViewState extends State<_CreateAccountView> {
 
   void _onContinue() {
     if (!_formKey.currentState!.validate()) return;
-    widget.authCubit.signUpWithEmailAndPassword(
+    _authCubit.signUpWithEmailAndPassword(
       email: _emailController.text.trim(),
       password: _passwordController.text,
       firstName: _firstNameController.text.trim().isEmpty
@@ -162,7 +135,7 @@ class _CreateAccountViewState extends State<_CreateAccountView> {
     );
   }
 
-  // Overlay-local when the submit button’s RenderBox isn’t available yet.
+  // Overlay-local when the submit button's RenderBox isn't available yet.
   Offset _fallbackAuthSubmitAnchor(BuildContext context) {
     final screenSize = MediaQuery.sizeOf(context);
     return Offset(
@@ -184,7 +157,7 @@ class _CreateAccountViewState extends State<_CreateAccountView> {
               horizontal: _kAuthHorizontalPadding,
             ),
             child: BlocConsumer<AuthCubit, AuthState>(
-              bloc: widget.authCubit,
+              bloc: _authCubit,
               listenWhen: (prev, current) {
                 if (current is AuthError) return true;
                 if (current is AuthAuthenticated) {
@@ -195,14 +168,14 @@ class _CreateAccountViewState extends State<_CreateAccountView> {
               listener: (context, state) {
                 if (state is AuthError) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.message)),
+                    SnackBar(content: Text(state.code.toLocalizedMessage())),
                   );
                 }
                 if (state is AuthAuthenticated) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     if (!context.mounted) return;
-                    final origin = VantageSuccessBurstOverlay
-                        .originInOverlayForButton(
+                    final origin =
+                        VantageSuccessBurstOverlay.originInOverlayForButton(
                       context,
                       buttonKey: _authSubmitKey,
                       fallback: _fallbackAuthSubmitAnchor(context),
@@ -213,9 +186,7 @@ class _CreateAccountViewState extends State<_CreateAccountView> {
                       origin: origin,
                       onComplete: () {
                         if (context.mounted) {
-                          context.router.replaceAll(
-                            [const NavigationRoute()],
-                          );
+                          context.router.replaceAll([const NavigationRoute()]);
                         }
                       },
                     );
@@ -320,7 +291,7 @@ class _CreateAccountViewState extends State<_CreateAccountView> {
                       ),
                       const SizedBox(height: _kFieldGap),
                       BlocBuilder<_PasswordVisibilityCubit, bool>(
-                        bloc: widget.passwordVisibilityCubit,
+                        bloc: _passwordVisibilityCubit,
                         builder: (context, obscurePassword) {
                           return TextFormField(
                             controller: _passwordController,
@@ -336,8 +307,7 @@ class _CreateAccountViewState extends State<_CreateAccountView> {
                               context,
                               hintText: LocaleKeys.auth_password.tr(),
                               suffixIcon: IconButton(
-                                onPressed:
-                                    widget.passwordVisibilityCubit.toggle,
+                                onPressed: _passwordVisibilityCubit.toggle,
                                 icon: Icon(
                                   obscurePassword
                                       ? Icons.visibility_off_outlined

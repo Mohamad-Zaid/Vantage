@@ -6,7 +6,7 @@ import 'package:vantage/features/auth/domain/usecases/update_user_profile_usecas
 
 import 'edit_profile_state.dart';
 
-class EditProfileCubit extends Cubit<EditProfileState> {
+final class EditProfileCubit extends Cubit<EditProfileState> {
   EditProfileCubit(this._getUser, this._update) : super(const EditProfileLoading());
 
   final GetCurrentUserUseCase _getUser;

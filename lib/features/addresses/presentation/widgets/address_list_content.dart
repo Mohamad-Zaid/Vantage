@@ -8,6 +8,7 @@ import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/translations/locale_keys.g.dart';
 import 'package:vantage/core/widgets/vantage_loading_indicator.dart';
 import 'package:vantage/features/addresses/domain/entities/address_entity.dart';
+import 'package:vantage/core/presentation/failure_display_ext.dart';
 import 'package:vantage/features/addresses/presentation/cubit/addresses_cubit.dart';
 import 'package:vantage/features/addresses/presentation/cubit/addresses_state.dart';
 import 'package:vantage/features/addresses/presentation/widgets/address_dismiss_background.dart';
@@ -29,7 +30,7 @@ class AddressListContent extends StatelessWidget {
       builder: (context, state) => switch (state) {
         AddressesInitial() || AddressesLoading() =>
           const Center(child: VantageLoadingIndicator()),
-        AddressesError(:final message) => AddressErrorView(message: message),
+        AddressesError(:final failure) => AddressErrorView(message: failure.displayMessage),
         AddressesLoaded(:final addresses) when addresses.isEmpty =>
           AddressEmptyView(mutedColor: mutedColor),
         AddressesLoaded(:final addresses) =>

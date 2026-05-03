@@ -1,7 +1,6 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vantage/core/translations/locale_keys.g.dart';
 
+import '../../domain/entities/auth_error_code.dart';
 import '../../domain/usecases/send_password_reset_email_usecase.dart';
 import 'password_reset_state.dart';
 
@@ -29,13 +28,9 @@ final class PasswordResetCubit extends Cubit<PasswordResetState> {
     }
   }
 
-  String _mapError(String msg) {
-    if (msg.contains('invalid-email')) {
-      return LocaleKeys.auth_errorInvalidEmail.tr();
-    }
-    if (msg.contains('network-request-failed')) {
-      return LocaleKeys.auth_errorNetwork.tr();
-    }
-    return msg;
+  AuthErrorCode _mapError(String msg) {
+    if (msg.contains('invalid-email')) return AuthErrorCode.invalidEmail;
+    if (msg.contains('network-request-failed')) return AuthErrorCode.network;
+    return AuthErrorCode.unknown;
   }
 }

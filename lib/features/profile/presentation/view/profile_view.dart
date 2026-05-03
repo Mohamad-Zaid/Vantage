@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vantage/core/translations/locale_keys.g.dart';
 import 'package:vantage/core/widgets/vantage_loading_indicator.dart';
 import 'package:vantage/di/injection.dart';
+import 'package:vantage/features/auth/presentation/auth_error_ext.dart';
 import 'package:vantage/router/app_router.dart';
 
 import '../../../auth/presentation/cubit/auth_cubit.dart';
@@ -151,11 +152,11 @@ class _ProfileView extends StatelessWidget {
                     ),
                   ),
                 ),
-              AuthError(:final message) => Center(
+              AuthError(:final code) => Center(
                   child: Padding(
                     padding: const EdgeInsets.all(24),
                     child: Text(
-                      message,
+                      code.toLocalizedMessage(),
                       textAlign: TextAlign.center,
                     ),
                   ),

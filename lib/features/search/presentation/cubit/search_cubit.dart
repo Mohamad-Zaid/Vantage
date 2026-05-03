@@ -1,9 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vantage/core/domain/failures/failure.dart';
 import 'package:vantage/features/search/domain/entities/search_filter.dart';
 import 'package:vantage/features/search/domain/usecases/search_products_usecase.dart';
 import 'search_state.dart';
 
-class SearchCubit extends Cubit<SearchState> {
+final class SearchCubit extends Cubit<SearchState> {
   SearchCubit(this._searchProducts) : super(const SearchInitial());
 
   final SearchProductsUseCase _searchProducts;
@@ -40,7 +41,7 @@ class SearchCubit extends Cubit<SearchState> {
       }
     } catch (e) {
       if (isClosed) return;
-      emit(SearchError(message: e.toString()));
+      emit(SearchError(failure: UnknownFailure(e.toString())));
     }
   }
 }

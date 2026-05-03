@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:vantage/core/domain/failures/failure.dart';
 import 'package:vantage/features/home/domain/usecases/get_products_by_category_usecase.dart';
 
 import 'category_products_state.dart';
@@ -18,7 +18,7 @@ final class CategoryProductsCubit extends Cubit<CategoryProductsState> {
       emit(CategoryProductsLoaded(products));
     } catch (e) {
       if (isClosed) return;
-      emit(CategoryProductsError(e.toString()));
+      emit(CategoryProductsError(UnknownFailure(e.toString())));
     }
   }
 }

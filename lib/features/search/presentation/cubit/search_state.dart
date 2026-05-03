@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:vantage/core/domain/entities/product_entity.dart';
+import 'package:vantage/core/domain/failures/failure.dart';
 
 sealed class SearchState extends Equatable {
   const SearchState();
@@ -36,10 +37,10 @@ final class SearchEmpty extends SearchState {
 }
 
 final class SearchError extends SearchState {
-  const SearchError({required this.message});
+  const SearchError({required this.failure});
 
-  final String message;
+  final Failure failure;
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [failure];
 }

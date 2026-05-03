@@ -61,14 +61,14 @@ class HomeShelvesSection extends StatelessWidget {
               const SizedBox(height: AppSpacing.xs),
             ],
           ),
-          ProductError(:final message) => Padding(
+          ProductError(:final failure) => Padding(
             padding: const EdgeInsets.all(24),
             child: Column(
               children: [
                 Text(LocaleKeys.common_error.tr()),
                 const SizedBox(height: AppSpacing.xxs),
                 Text(
-                  message,
+                  failure.displayMessage,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),

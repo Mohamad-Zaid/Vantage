@@ -9,6 +9,7 @@ import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/widgets/vantage_circle_back_button.dart';
 import 'package:vantage/core/widgets/vantage_loading_indicator.dart';
+import 'package:vantage/core/presentation/failure_display_ext.dart';
 import 'package:vantage/generated/assets.dart';
 
 import '../cubit/search_cubit.dart';
@@ -123,9 +124,9 @@ class _SearchPageState extends State<SearchPage> {
                             ),
                           ],
                         ),
-                      SearchError(:final message) => Center(
+                      SearchError(:final failure) => Center(
                           child: Text(
-                            message,
+                            failure.displayMessage,
                             style: GoogleFonts.nunitoSans(
                               color: VantageColors.authPrimaryPurple,
                             ),

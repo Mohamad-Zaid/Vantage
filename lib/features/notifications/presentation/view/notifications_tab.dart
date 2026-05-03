@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:vantage/core/presentation/failure_display_ext.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/di/injection.dart';
 
@@ -70,8 +71,8 @@ class _NotificationsTabState extends State<NotificationsTab> {
                       onDismissed: (id) =>
                           unawaited(_cubit.removeNotification(id)),
                     ),
-                  NotificationsError(:final message) => NotificationsErrorView(
-                    message: message,
+                  NotificationsError(:final failure) => NotificationsErrorView(
+                    message: failure.displayMessage,
                     onRetry: _cubit.load,
                   ),
                 };

@@ -20,11 +20,5 @@ class CategoryModel extends CategoryEntity with EquatableMixin {
 
   Map<String, dynamic> toJson() => _$CategoryModelToJson(this);
 
-  CategoryEntity toEntity() => CategoryEntity(
-        id: id,
-        title: title,
-        slug: slug,
-        iconUrl: iconUrl,
-        backgroundColor: backgroundColor,
-      );
+  CategoryEntity toEntity() => this;
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:vantage/core/domain/failures/failure.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vantage/core/constants/app_constants.dart';
 import 'package:vantage/features/addresses/domain/entities/address_entity.dart';
@@ -56,7 +57,7 @@ final class CheckoutCubit extends Cubit<CheckoutState> {
         debugPrint(
           'CheckoutCubit._watchAddresses subscription failed: $error\n$stackTrace',
         );
-        emit(CheckoutError(error.toString()));
+        emit(CheckoutError(UnknownFailure(error.toString())));
       },
     );
   }
@@ -123,7 +124,7 @@ final class CheckoutCubit extends Cubit<CheckoutState> {
     } catch (error, stackTrace) {
       debugPrint('CheckoutCubit.submitOrder failed: $error\n$stackTrace');
       if (isClosed) return;
-      emit(CheckoutError(error.toString()));
+      emit(CheckoutError(UnknownFailure(error.toString())));
       if (isClosed) return;
       emit(readyState.copyWith(isPlacing: false));
     }

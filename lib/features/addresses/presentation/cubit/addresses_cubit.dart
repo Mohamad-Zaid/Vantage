@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:vantage/core/auth/auth_aware_cubit.dart';
+import 'package:vantage/core/domain/failures/failure.dart';
 import 'package:vantage/core/auth/current_user_provider.dart';
 import 'package:vantage/core/cubits/cubit_error_handler.dart';
 import 'package:vantage/core/domain/entities/user_entity.dart';
@@ -57,7 +58,7 @@ final class AddressesCubit extends AuthAwareCubit<AddressesState>
         debugPrint(
           'AddressesCubit._watchAddresses subscription failed: $error\n$stackTrace',
         );
-        emit(AddressesError(error.toString()));
+        emit(AddressesError(UnknownFailure(error.toString())));
       },
     );
   }
@@ -73,7 +74,7 @@ final class AddressesCubit extends AuthAwareCubit<AddressesState>
         if (!isClosed) emit(_lastLoaded!);
       },
       onError: (error) {
-        emit(AddressesError(error.toString()));
+        emit(AddressesError(UnknownFailure(error.toString())));
         final previous = _lastLoaded;
         if (previous != null) emit(previous);
       },
@@ -94,7 +95,7 @@ final class AddressesCubit extends AuthAwareCubit<AddressesState>
         await _upsertAddress(user.id, address);
       },
       onError: (error) {
-        emit(AddressesError(error.toString()));
+        emit(AddressesError(UnknownFailure(error.toString())));
         final previous = _lastLoaded;
         if (previous != null) emit(previous);
       },
@@ -116,7 +117,7 @@ final class AddressesCubit extends AuthAwareCubit<AddressesState>
         await _removeAddress(user.id, addressId);
       },
       onError: (error) {
-        emit(AddressesError(error.toString()));
+        emit(AddressesError(UnknownFailure(error.toString())));
         final previous = _lastLoaded;
         if (previous != null) emit(previous);
       },

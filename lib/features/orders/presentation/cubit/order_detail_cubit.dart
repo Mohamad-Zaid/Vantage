@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vantage/core/domain/failures/failure.dart';
 
 import '../../domain/usecases/get_order_detail_usecase.dart';
 import 'order_detail_state.dart';
@@ -22,7 +23,7 @@ final class OrderDetailCubit extends Cubit<OrderDetailState> {
       emit(OrderDetailLoaded(detail));
     } catch (e) {
       if (isClosed) return;
-      emit(OrderDetailError(e.toString()));
+      emit(OrderDetailError(UnknownFailure(e.toString())));
     }
   }
 

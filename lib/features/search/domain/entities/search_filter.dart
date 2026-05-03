@@ -6,7 +6,7 @@ enum GenderFilter { men, women, kids }
 
 enum DealFilter { onSale, freeShipping }
 
-class SearchFilter extends Equatable {
+final class SearchFilter extends Equatable {
   const SearchFilter({
     this.sortBy = SortBy.recommended,
     this.gender,

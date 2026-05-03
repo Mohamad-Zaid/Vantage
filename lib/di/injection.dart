@@ -17,6 +17,7 @@ import '../features/auth/domain/usecases/update_user_profile_usecase.dart';
 import '../features/auth/domain/usecases/watch_auth_state_usecase.dart';
 import '../features/auth/presentation/cubit/auth_cubit.dart';
 import '../features/auth/presentation/cubit/password_reset_cubit.dart';
+import '../features/profile/presentation/cubit/edit_profile_cubit.dart';
 import '../features/addresses/data/datasources/addresses_remote_datasource.dart';
 import '../features/addresses/data/repositories_impl/addresses_repository_impl.dart';
 import '../features/addresses/domain/repositories/addresses_repository.dart';
@@ -47,6 +48,7 @@ import '../features/home/presentation/cubit/category_cubit.dart';
 import '../features/home/presentation/cubit/home_audience_cubit.dart';
 import '../features/categories/presentation/cubit/category_products_cubit.dart';
 import '../features/home/presentation/cubit/product_cubit.dart';
+import '../features/navigation/presentation/cubit/navigation_cubit.dart';
 import '../features/notifications/data/datasources/notifications_local_datasource.dart';
 import '../features/notifications/data/repositories_impl/notifications_repository_impl.dart';
 import '../features/notifications/domain/repositories/notifications_repository.dart';
@@ -125,6 +127,12 @@ Future<void> initInjector() async {
   sl.registerFactory<PasswordResetCubit>(
     () => PasswordResetCubit(sl<SendPasswordResetEmailUseCase>()),
   );
+  sl.registerFactory<EditProfileCubit>(
+    () => EditProfileCubit(
+      sl<GetCurrentUserUseCase>(),
+      sl<UpdateUserProfileUseCase>(),
+    ),
+  );
 
   sl.registerLazySingleton<ShopLocalDataSource>(ShopLocalDataSourceImpl.new);
 
@@ -147,6 +155,8 @@ Future<void> initInjector() async {
   sl.registerLazySingleton<SearchProductsUseCase>(
     () => SearchProductsUseCase(sl<ProductRepository>()),
   );
+
+  sl.registerFactory<NavigationCubit>(NavigationCubit.new);
 
   sl.registerFactory<CategoryCubit>(
     () => CategoryCubit(sl<GetCategoriesUseCase>()),

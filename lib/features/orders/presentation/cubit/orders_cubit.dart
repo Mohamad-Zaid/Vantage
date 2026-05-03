@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:vantage/core/cubits/cubit_error_handler.dart';
+import 'package:vantage/core/domain/failures/failure.dart';
 import '../../domain/entities/order_status_filter.dart';
 import '../../domain/entities/order_summary_entity.dart';
 import '../../domain/entities/order_summaries_page_result.dart';
@@ -36,7 +37,7 @@ final class OrdersCubit extends Cubit<OrdersState> with CubitErrorHandler<Orders
       },
       onError: (error) {
         if (isClosed) return;
-        emit(OrdersError(error.toString()));
+        emit(OrdersError(UnknownFailure(error.toString())));
       },
     );
   }
@@ -51,7 +52,7 @@ final class OrdersCubit extends Cubit<OrdersState> with CubitErrorHandler<Orders
       },
       onError: (error) {
         if (isClosed) return;
-        emit(OrdersError(error.toString()));
+        emit(OrdersError(UnknownFailure(error.toString())));
       },
     );
   }
@@ -86,7 +87,7 @@ final class OrdersCubit extends Cubit<OrdersState> with CubitErrorHandler<Orders
       },
       onError: (error) {
         if (isClosed) return;
-        emit(OrdersError(error.toString()));
+        emit(OrdersError(UnknownFailure(error.toString())));
       },
     );
     _loadingMore = false;
@@ -132,7 +133,7 @@ final class OrdersCubit extends Cubit<OrdersState> with CubitErrorHandler<Orders
       },
       onError: (error) {
         if (isClosed) return;
-        emit(OrdersError(error.toString()));
+        emit(OrdersError(UnknownFailure(error.toString())));
       },
     );
   }

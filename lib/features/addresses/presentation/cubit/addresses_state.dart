@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+import 'package:vantage/core/domain/failures/failure.dart';
 import 'package:vantage/features/addresses/domain/entities/address_entity.dart';
 
 sealed class AddressesState extends Equatable {
@@ -31,10 +32,10 @@ final class AddressesNeedSignIn extends AddressesState {
 }
 
 final class AddressesError extends AddressesState {
-  const AddressesError(this.message);
+  const AddressesError(this.failure);
 
-  final String message;
+  final Failure failure;
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [failure];
 }

@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:vantage/core/errors/domain_exceptions.dart';
 import 'package:vantage/features/cart/data/datasources/cart_remote_datasource.dart';
 import 'package:vantage/features/cart/domain/entities/cart_line_entity.dart';
+import 'package:vantage/features/cart/domain/entities/cart_line_input.dart';
 import 'package:vantage/features/cart/domain/repositories/cart_repository.dart';
 
 final class CartRepositoryImpl implements CartRepository {
@@ -23,26 +24,17 @@ final class CartRepositoryImpl implements CartRepository {
   }
 
   @override
-  Future<void> addOrUpdateLine(
-    String userId, {
-    required String productId,
-    required String name,
-    required String imageUrl,
-    required double unitPrice,
-    required String size,
-    required String colorLabel,
-    required int quantityDelta,
-  }) async {
+  Future<void> addOrUpdateLine(String userId, CartLineInput input) async {
     try {
       await _remote.addOrUpdateLine(
         userId,
-        productId: productId,
-        name: name,
-        imageUrl: imageUrl,
-        unitPrice: unitPrice,
-        size: size,
-        colorLabel: colorLabel,
-        quantityDelta: quantityDelta,
+        productId: input.productId,
+        name: input.name,
+        imageUrl: input.imageUrl,
+        unitPrice: input.unitPrice,
+        size: input.size,
+        colorLabel: input.colorLabel,
+        quantityDelta: input.quantityDelta,
       );
     } on FirebaseException catch (e, st) {
       debugPrint('CartRepositoryImpl.addOrUpdateLine failed: $e\n$st');

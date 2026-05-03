@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'package:vantage/core/catalog/shop_categories_catalog.dart';
+import 'package:vantage/core/presentation/failure_display_ext.dart';
 import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/translations/locale_keys.g.dart';
@@ -97,12 +98,12 @@ class _CategoryDetailPageState extends State<CategoryDetailPage> {
                           const _CategoryGridShimmer(),
                         CategoryProductsLoading() =>
                           const _CategoryGridShimmer(),
-                        CategoryProductsError(:final message) => Center(
+                        CategoryProductsError(:final failure) => Center(
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  '${LocaleKeys.common_error.tr()}\n$message',
+                                  '${LocaleKeys.common_error.tr()}\n${failure.displayMessage}',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(color: titleColor),
                                 ),

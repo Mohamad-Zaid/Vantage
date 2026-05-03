@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:vantage/core/domain/failures/failure.dart';
 
 import '../../domain/entities/named_product_shelf.dart';
 import 'package:vantage/core/domain/entities/product_entity.dart';
@@ -36,10 +37,10 @@ final class ProductEmpty extends ProductState {
 }
 
 final class ProductError extends ProductState {
-  const ProductError(this.message);
+  const ProductError(this.failure);
 
-  final String message;
+  final Failure failure;
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [failure];
 }

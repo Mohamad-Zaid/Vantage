@@ -5,6 +5,7 @@ import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/theme/vantage_colors.dart';
 import 'package:vantage/core/translations/locale_keys.g.dart';
 import 'package:vantage/core/widgets/vantage_loading_indicator.dart';
+import 'package:vantage/core/presentation/failure_display_ext.dart';
 import 'package:vantage/di/injection.dart';
 
 import '../../domain/usecases/get_order_detail_usecase.dart';
@@ -68,14 +69,14 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               OrderDetailLoading() => const Center(
                 child: VantageLoadingIndicator(),
               ),
-              OrderDetailError(:final message) => RefreshIndicator(
+              OrderDetailError(:final failure) => RefreshIndicator(
                 onRefresh: _cubit.refresh,
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
                   child: SizedBox(
                     height: MediaQuery.sizeOf(context).height * 0.4,
                     child: OrdersErrorView(
-                      message: message,
+                      message: failure.displayMessage,
                       onRetry: _cubit.load,
                     ),
                   ),

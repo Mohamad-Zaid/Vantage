@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:vantage/core/domain/failures/failure.dart';
 
 import '../../domain/entities/order_detail_entity.dart';
 
@@ -27,10 +28,10 @@ final class OrderDetailLoaded extends OrderDetailState {
 }
 
 final class OrderDetailError extends OrderDetailState {
-  const OrderDetailError(this.message);
+  const OrderDetailError(this.failure);
 
-  final String message;
+  final Failure failure;
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [failure];
 }

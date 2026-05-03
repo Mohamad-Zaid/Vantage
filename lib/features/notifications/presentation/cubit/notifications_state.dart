@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+import 'package:vantage/core/domain/failures/failure.dart';
 import '../../domain/entities/notification_entity.dart';
 
 sealed class NotificationsState extends Equatable {
@@ -31,10 +32,10 @@ final class NotificationsEmpty extends NotificationsState {
 }
 
 final class NotificationsError extends NotificationsState {
-  const NotificationsError(this.message);
+  const NotificationsError(this.failure);
 
-  final String message;
+  final Failure failure;
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [failure];
 }

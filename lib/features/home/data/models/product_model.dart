@@ -24,15 +24,6 @@ class ProductModel extends ProductEntity with EquatableMixin {
 
   Map<String, dynamic> toJson() => _$ProductModelToJson(this);
 
-  ProductEntity toEntity() => ProductEntity(
-        id: id,
-        categoryId: categoryId,
-        name: name,
-        description: description,
-        imageUrl: imageUrl,
-        price: price,
-        compareAtPrice: compareAtPrice,
-        rating: rating,
-        stock: stock,
-      );
+  // ProductModel IS-A ProductEntity via inheritance — upcast directly to avoid copying fields.
+  ProductEntity toEntity() => this;
 }

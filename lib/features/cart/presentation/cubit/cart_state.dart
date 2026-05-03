@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+import 'package:vantage/core/domain/failures/failure.dart';
 import 'package:vantage/features/cart/domain/entities/cart_line_entity.dart';
 import 'package:vantage/features/cart/domain/entities/cart_totals.dart';
 
@@ -43,10 +44,10 @@ final class CartNeedSignIn extends CartState {
 }
 
 final class CartError extends CartState {
-  const CartError(this.message);
+  const CartError(this.failure);
 
-  final String message;
+  final Failure failure;
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [failure];
 }

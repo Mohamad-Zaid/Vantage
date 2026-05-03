@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vantage/core/theme/app_spacing.dart';
 import 'package:vantage/core/widgets/vantage_success_burst_overlay.dart';
+import 'package:vantage/features/auth/presentation/auth_error_ext.dart';
 import 'package:vantage/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:vantage/features/auth/presentation/cubit/auth_state.dart';
 import 'package:vantage/features/auth/presentation/cubit/sign_in_password_visibility_cubit.dart';
@@ -60,8 +61,9 @@ class _SignInFormViewState extends State<SignInFormView> {
 
   void _onAuthStateChanged(BuildContext context, AuthState state) {
     if (state is AuthError) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(state.message)));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(state.code.toLocalizedMessage())),
+      );
       return;
     }
     if (state is AuthAuthenticated) {

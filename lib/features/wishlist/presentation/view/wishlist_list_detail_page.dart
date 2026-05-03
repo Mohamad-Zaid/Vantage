@@ -14,6 +14,8 @@ import 'package:vantage/core/widgets/vantage_loading_indicator.dart';
 import 'package:vantage/core/widgets/vantage_product_card.dart';
 import 'package:vantage/router/app_router.dart';
 
+import 'package:vantage/core/presentation/failure_display_ext.dart';
+
 import '../cubit/favorites_cubit.dart';
 import '../cubit/favorites_state.dart';
 
@@ -86,7 +88,7 @@ class WishlistListDetailPage extends StatelessWidget {
                     FavoritesLoading() || FavoritesInitial() => const Center(
                         child: VantageLoadingIndicator(),
                       ),
-                    FavoritesError(:final message) => RefreshIndicator(
+                    FavoritesError(:final failure) => RefreshIndicator(
                         onRefresh: () =>
                             context.read<FavoritesCubit>().refresh(),
                         child: SingleChildScrollView(
@@ -99,7 +101,7 @@ class WishlistListDetailPage extends StatelessWidget {
                                   horizontal: AppSpacing.screenHorizontal,
                                 ),
                                 child: Text(
-                                  '${LocaleKeys.common_error.tr()}\n$message',
+                                  '${LocaleKeys.common_error.tr()}\n${failure.displayMessage}',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(color: titleColor),
                                 ),

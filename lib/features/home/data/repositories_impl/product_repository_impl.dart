@@ -30,6 +30,8 @@ final class ProductRepositoryImpl implements ProductRepository {
   }
   @override
   Future<List<ProductEntity>> getProductsByCategory(String categoryId) async {
+    // Local datasource only — fetches entire catalog and filters in-memory;
+    // replace with a targeted query if the source becomes remote.
     final all = await getProducts();
     return all.where((p) => p.categoryId == categoryId).toList();
   }

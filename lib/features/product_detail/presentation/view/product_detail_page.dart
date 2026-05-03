@@ -118,6 +118,18 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    return BlocBuilder<ProductDetailCubit, ProductDetailState>(
+      bloc: _cubit,
+      buildWhen: (p, c) => p != c,
+      builder: (context, state) {
+        return switch (state) {
+          ProductDetailReady() => _buildReady(context, state),
+        };
+      },
+    );
+  }
+
+  Widget _buildReady(BuildContext context, ProductDetailReady state) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final titleColor = isDark
         ? Colors.white
@@ -128,320 +140,312 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     final purple = VantageColors.authPrimaryPurple;
     const starColor = Color(0xFFFFC107);
 
-    return BlocBuilder<ProductDetailCubit, ProductDetailState>(
-      bloc: _cubit,
-      buildWhen: (p, c) => p != c,
-      builder: (context, state) {
-        final product = state.product;
-        final salePct = product.saleDiscountPercent;
-        final onSale =
-            product.compareAtPrice != null &&
-            product.compareAtPrice! > product.price;
-        final colorOpts = ProductDetailColorOptions.options;
-        final idx = state.selectedColorIndex.clamp(0, colorOpts.length - 1);
-        final swatch = colorOpts[idx].swatch;
+    final product = state.product;
+    final salePct = product.saleDiscountPercent;
+    final onSale =
+        product.compareAtPrice != null &&
+        product.compareAtPrice! > product.price;
+    final colorOpts = ProductDetailColorOptions.options;
+    final idx = state.selectedColorIndex.clamp(0, colorOpts.length - 1);
+    final swatch = colorOpts[idx].swatch;
 
-        return Scaffold(
-          body: SafeArea(
-            child: Column(
-              children: [
-                Expanded(
-                  child: CustomScrollView(
-                    slivers: [
-                      SliverToBoxAdapter(
-                        child: BlocBuilder<FavoritesCubit, FavoritesState>(
-                          buildWhen: (p, c) =>
-                              c is FavoritesLoaded ||
-                              c is FavoritesLoading ||
-                              c is FavoritesInitial,
-                          builder: (context, favState) {
-                            final ids = favState is FavoritesLoaded
-                                ? favState.ids
-                                : <String>{};
-                            return ProductDetailGalleryHeader(
-                              product: product,
-                              isFavorite: ids.contains(product.id),
-                              onBack: () => context.router.maybePop(),
-                              onFavoriteTap: () => context
-                                  .read<FavoritesCubit>()
-                                  .toggleFavorite(product),
-                            );
-                          },
-                        ),
-                      ),
-                      SliverPadding(
-                        padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
-                        sliver: SliverList(
-                          delegate: SliverChildListDelegate([
-                            Text(
-                              product.name,
-                              style: GoogleFonts.gabarito(
-                                color: titleColor,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                                height: 1.25,
-                              ),
-                            ),
-                            const SizedBox(height: AppSpacing.sm),
-                            Wrap(
-                              spacing: AppSpacing.sm,
-                              runSpacing: AppSpacing.xs,
-                              crossAxisAlignment: WrapCrossAlignment.center,
-                              children: [
-                                Text(
-                                  _categoryLabel(product.categoryId),
-                                  style: GoogleFonts.nunitoSans(
-                                    color: purple,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
-                                    height: 1.2,
-                                  ),
-                                ),
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      Icons.star_rounded,
-                                      size: 18,
-                                      color: starColor,
-                                    ),
-                                    const SizedBox(width: AppSpacing.xxs),
-                                    Text(
-                                      LocaleKeys.productDetail_ratingReviewLine
-                                          .tr(
-                                            namedArgs: {
-                                              'rating': product.rating
-                                                  .toStringAsFixed(1),
-                                              'count': '120',
-                                            },
-                                          ),
-                                      style: GoogleFonts.nunitoSans(
-                                        color: bodyMuted,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w500,
-                                        height: 1.35,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                if (onSale && salePct != null)
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: AppSpacing.inset10,
-                                      vertical: AppSpacing.xxs,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFFE53935),
-                                      borderRadius:
-                                          BorderRadius.circular(AppSpacing.xs),
-                                    ),
-                                    child: Text(
-                                      '-$salePct%',
-                                      style: GoogleFonts.gabarito(
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w800,
-                                        height: 1,
-                                      ),
-                                    ),
-                                  ),
-                              ],
-                            ),
-                            const SizedBox(height: AppSpacing.lg),
-                            Text(
-                              product.description,
-                              style: GoogleFonts.nunitoSans(
-                                color: bodyMuted,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
-                                height: 1.6,
-                              ),
-                            ),
-                            const SizedBox(height: AppSpacing.lg),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.baseline,
-                              textBaseline: TextBaseline.alphabetic,
-                              children: [
-                                Text(
-                                  _formatUsd(product.price),
-                                  style: GoogleFonts.gabarito(
-                                    color: purple,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                    height: 1.25,
-                                  ),
-                                ),
-                                if (onSale) ...[
-                                  const SizedBox(width: AppSpacing.sm),
-                                  Text(
-                                    _formatUsd(product.compareAtPrice!),
-                                    style: GoogleFonts.nunitoSans(
-                                      color: bodyMuted,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      decoration: TextDecoration.lineThrough,
-                                      height: 1.25,
-                                    ),
-                                  ),
-                                ],
-                              ],
-                            ),
-                            const SizedBox(height: AppSpacing.lg),
-                            ProductDetailOptionRow(
-                              label: LocaleKeys.productDetail_size.tr(),
-                              onTap: () => _openSizeSheet(context, state),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    state.selectedSize,
-                                    style: GoogleFonts.gabarito(
-                                      color: titleColor,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                  const SizedBox(width: AppSpacing.sm),
-                                  Icon(
-                                    Icons.keyboard_arrow_down_rounded,
-                                    color: titleColor,
-                                    size: AppSpacing.xl,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: AppSpacing.md),
-                            ProductDetailOptionRow(
-                              label: LocaleKeys.productDetail_color.tr(),
-                              onTap: () => _openColorSheet(context, state),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Container(
-                                    width: 16,
-                                    height: 16,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: swatch,
-                                      border: Border.all(
-                                        color: isDark
-                                            ? Colors.white54
-                                            : const Color(0xFFE0E0E0),
-                                        width: 1,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: AppSpacing.sm),
-                                  Icon(
-                                    Icons.keyboard_arrow_down_rounded,
-                                    color: titleColor,
-                                    size: AppSpacing.xl,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: AppSpacing.md),
-                            ProductDetailQuantityRow(
-                              label: LocaleKeys.productDetail_quantity.tr(),
-                              quantity: state.quantity,
-                              onIncrement: _cubit.incrementQuantity,
-                              onDecrement: _cubit.decrementQuantity,
-                            ),
-                            const SizedBox(height: AppSpacing.xl),
-                            Text(
-                              LocaleKeys.productDetail_shippingReturns.tr(),
-                              style: GoogleFonts.gabarito(
-                                color: titleColor,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                                height: 1.25,
-                              ),
-                            ),
-                            const SizedBox(height: AppSpacing.sm),
-                            Text(
-                              LocaleKeys.productDetail_shippingReturnsBody.tr(),
-                              style: GoogleFonts.nunitoSans(
-                                color: bodyMuted,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
-                                height: 1.6,
-                              ),
-                            ),
-                            const SizedBox(height: AppSpacing.inset25),
-                          ]),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    AppSpacing.screenHorizontal,
-                    0,
-                    AppSpacing.screenHorizontal,
-                    AppSpacing.lg,
-                  ),
-                  child: VantagePrimaryButton(
-                    key: _addToBagKey,
-                    label: LocaleKeys.productDetail_addToBag.tr(),
-                    horizontalPadding: AppSpacing.screenHorizontal,
-                    onPressed: () async {
-                      final cart = context.read<CartCubit>();
-                      await cart.addProductLine(
-                        productId: product.id,
-                        name: product.name,
-                        imageUrl: product.imageUrl,
-                        unitPrice: product.price,
-                        size: state.selectedSize,
-                        colorLabel: _localizedColorName(idx),
-                        quantity: state.quantity,
-                      );
-                      if (!mounted) return;
-                      final origin = VantageSuccessBurstOverlay
-                          .originInOverlayForButton(
-                        this.context,
-                        buttonKey: _addToBagKey,
-                        fallback: _fallbackAddToBagAnchor(this.context),
-                      );
-                      if (!mounted) return;
-                      VantageSuccessBurstOverlay.show(
-                        this.context,
-                        origin: origin,
-                        onComplete: () {
-                          if (this.context.mounted) {
-                            Navigator.of(this.context).pop();
-                          }
-                        },
-                      );
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          _formatUsd(product.price),
-                          style: GoogleFonts.gabarito(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        Text(
-                          LocaleKeys.productDetail_addToBag.tr(),
-                          style: GoogleFonts.nunitoSans(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ],
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: BlocBuilder<FavoritesCubit, FavoritesState>(
+                      buildWhen: (p, c) =>
+                          c is FavoritesLoaded ||
+                          c is FavoritesLoading ||
+                          c is FavoritesInitial,
+                      builder: (context, favState) {
+                        final ids = favState is FavoritesLoaded
+                            ? favState.ids
+                            : <String>{};
+                        return ProductDetailGalleryHeader(
+                          product: product,
+                          isFavorite: ids.contains(product.id),
+                          onBack: () => context.router.maybePop(),
+                          onFavoriteTap: () => context
+                              .read<FavoritesCubit>()
+                              .toggleFavorite(product),
+                        );
+                      },
                     ),
                   ),
-                ),
-              ],
+                  SliverPadding(
+                    padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
+                    sliver: SliverList(
+                      delegate: SliverChildListDelegate([
+                        Text(
+                          product.name,
+                          style: GoogleFonts.gabarito(
+                            color: titleColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            height: 1.25,
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.sm),
+                        Wrap(
+                          spacing: AppSpacing.sm,
+                          runSpacing: AppSpacing.xs,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
+                            Text(
+                              _categoryLabel(product.categoryId),
+                              style: GoogleFonts.nunitoSans(
+                                color: purple,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                height: 1.2,
+                              ),
+                            ),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.star_rounded,
+                                  size: 18,
+                                  color: starColor,
+                                ),
+                                const SizedBox(width: AppSpacing.xxs),
+                                Text(
+                                  LocaleKeys.productDetail_ratingReviewLine.tr(
+                                    namedArgs: {
+                                      'rating': product.rating.toStringAsFixed(1),
+                                      'count': '120',
+                                    },
+                                  ),
+                                  style: GoogleFonts.nunitoSans(
+                                    color: bodyMuted,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500,
+                                    height: 1.35,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            if (onSale && salePct != null)
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: AppSpacing.inset10,
+                                  vertical: AppSpacing.xxs,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFE53935),
+                                  borderRadius:
+                                      BorderRadius.circular(AppSpacing.xs),
+                                ),
+                                child: Text(
+                                  '-$salePct%',
+                                  style: GoogleFonts.gabarito(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w800,
+                                    height: 1,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                        const SizedBox(height: AppSpacing.lg),
+                        Text(
+                          product.description,
+                          style: GoogleFonts.nunitoSans(
+                            color: bodyMuted,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            height: 1.6,
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.lg),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.baseline,
+                          textBaseline: TextBaseline.alphabetic,
+                          children: [
+                            Text(
+                              _formatUsd(product.price),
+                              style: GoogleFonts.gabarito(
+                                color: purple,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                height: 1.25,
+                              ),
+                            ),
+                            if (onSale) ...[
+                              const SizedBox(width: AppSpacing.sm),
+                              Text(
+                                _formatUsd(product.compareAtPrice!),
+                                style: GoogleFonts.nunitoSans(
+                                  color: bodyMuted,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  decoration: TextDecoration.lineThrough,
+                                  height: 1.25,
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                        const SizedBox(height: AppSpacing.lg),
+                        ProductDetailOptionRow(
+                          label: LocaleKeys.productDetail_size.tr(),
+                          onTap: () => _openSizeSheet(context, state),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                state.selectedSize,
+                                style: GoogleFonts.gabarito(
+                                  color: titleColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(width: AppSpacing.sm),
+                              Icon(
+                                Icons.keyboard_arrow_down_rounded,
+                                color: titleColor,
+                                size: AppSpacing.xl,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.md),
+                        ProductDetailOptionRow(
+                          label: LocaleKeys.productDetail_color.tr(),
+                          onTap: () => _openColorSheet(context, state),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                width: 16,
+                                height: 16,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: swatch,
+                                  border: Border.all(
+                                    color: isDark
+                                        ? Colors.white54
+                                        : const Color(0xFFE0E0E0),
+                                    width: 1,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: AppSpacing.sm),
+                              Icon(
+                                Icons.keyboard_arrow_down_rounded,
+                                color: titleColor,
+                                size: AppSpacing.xl,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.md),
+                        ProductDetailQuantityRow(
+                          label: LocaleKeys.productDetail_quantity.tr(),
+                          quantity: state.quantity,
+                          onIncrement: _cubit.incrementQuantity,
+                          onDecrement: _cubit.decrementQuantity,
+                        ),
+                        const SizedBox(height: AppSpacing.xl),
+                        Text(
+                          LocaleKeys.productDetail_shippingReturns.tr(),
+                          style: GoogleFonts.gabarito(
+                            color: titleColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            height: 1.25,
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.sm),
+                        Text(
+                          LocaleKeys.productDetail_shippingReturnsBody.tr(),
+                          style: GoogleFonts.nunitoSans(
+                            color: bodyMuted,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            height: 1.6,
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.inset25),
+                      ]),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        );
-      },
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.screenHorizontal,
+                0,
+                AppSpacing.screenHorizontal,
+                AppSpacing.lg,
+              ),
+              child: VantagePrimaryButton(
+                key: _addToBagKey,
+                label: LocaleKeys.productDetail_addToBag.tr(),
+                horizontalPadding: AppSpacing.screenHorizontal,
+                onPressed: () async {
+                  final cart = context.read<CartCubit>();
+                  await cart.addProductLine(
+                    productId: product.id,
+                    name: product.name,
+                    imageUrl: product.imageUrl,
+                    unitPrice: product.price,
+                    size: state.selectedSize,
+                    colorLabel: _localizedColorName(idx),
+                    quantity: state.quantity,
+                  );
+                  if (!mounted) return;
+                  final origin = VantageSuccessBurstOverlay
+                      .originInOverlayForButton(
+                    this.context,
+                    buttonKey: _addToBagKey,
+                    fallback: _fallbackAddToBagAnchor(this.context),
+                  );
+                  if (!mounted) return;
+                  VantageSuccessBurstOverlay.show(
+                    this.context,
+                    origin: origin,
+                    onComplete: () {
+                      if (this.context.mounted) {
+                        Navigator.of(this.context).pop();
+                      }
+                    },
+                  );
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      _formatUsd(product.price),
+                      style: GoogleFonts.gabarito(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    Text(
+                      LocaleKeys.productDetail_addToBag.tr(),
+                      style: GoogleFonts.nunitoSans(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

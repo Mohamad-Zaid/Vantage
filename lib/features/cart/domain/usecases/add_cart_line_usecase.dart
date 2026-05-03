@@ -1,3 +1,4 @@
+import 'package:vantage/features/cart/domain/entities/cart_line_input.dart';
 import 'package:vantage/features/cart/domain/repositories/cart_repository.dart';
 
 final class AddCartLineUseCase {
@@ -5,25 +6,7 @@ final class AddCartLineUseCase {
 
   final CartRepository _repo;
 
-  Future<void> call(
-    String userId, {
-    required String productId,
-    required String name,
-    required String imageUrl,
-    required double unitPrice,
-    required String size,
-    required String colorLabel,
-    int quantityDelta = 1,
-  }) {
-    return _repo.addOrUpdateLine(
-      userId,
-      productId: productId,
-      name: name,
-      imageUrl: imageUrl,
-      unitPrice: unitPrice,
-      size: size,
-      colorLabel: colorLabel,
-      quantityDelta: quantityDelta,
-    );
+  Future<void> call(String userId, CartLineInput input) {
+    return _repo.addOrUpdateLine(userId, input);
   }
 }

@@ -1,6 +1,6 @@
 import '../../domain/entities/faq_entity.dart';
 
-class FAQModel extends FAQEntity {
+final class FAQModel extends FAQEntity {
   const FAQModel({
     required super.id,
     required super.question,
@@ -22,4 +22,7 @@ class FAQModel extends FAQEntity {
       'answer': answer,
     };
   }
+
+  // FAQModel IS-A FAQEntity via inheritance — upcast directly.
+  FAQEntity toEntity() => this;
 }

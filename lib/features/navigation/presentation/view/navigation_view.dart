@@ -6,7 +6,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../core/theme/vantage_colors.dart';
 import '../../../../core/widgets/exit_confirmation_dialog.dart';
+import '../../../../di/injection.dart';
 import '../../../../generated/assets.dart';
+import '../../../auth/presentation/cubit/auth_cubit.dart';
+import '../../../home/presentation/cubit/home_audience_cubit.dart';
+import '../../../home/presentation/cubit/product_cubit.dart';
 import '../../../profile/presentation/view/profile_view.dart';
 import '../../../home/presentation/view/home_view.dart';
 import '../../../notifications/presentation/view/notifications_tab.dart';
@@ -31,21 +35,33 @@ class NavigationPage extends StatefulWidget {
 
 class _NavigationPageState extends State<NavigationPage> {
   late final NavigationCubit _navigationCubit;
+  late final ProductCubit _productCubit;
+  late final HomeAudienceCubit _audienceCubit;
+  late final AuthCubit _authCubit;
 
   @override
   void initState() {
     super.initState();
-    _navigationCubit = NavigationCubit();
+    _navigationCubit = sl<NavigationCubit>();
+    _productCubit = sl<ProductCubit>();
+    _audienceCubit = sl<HomeAudienceCubit>();
+    _authCubit = sl<AuthCubit>();
   }
 
   @override
   void dispose() {
     _navigationCubit.close();
+    // Home-tab cubits are closed by _HomePageState.dispose() — no double-close here.
     super.dispose();
   }
 
   List<Widget> _tabs() => [
-    HomePage(navigationCubit: _navigationCubit),
+    HomePage(
+      navigationCubit: _navigationCubit,
+      productCubit: _productCubit,
+      audienceCubit: _audienceCubit,
+      authCubit: _authCubit,
+    ),
     const NotificationsTab(),
     const OrdersTab(),
     const ProfilePage(),

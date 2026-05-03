@@ -7,7 +7,7 @@ import 'product_detail_state.dart';
 final class ProductDetailCubit extends Cubit<ProductDetailState> {
   ProductDetailCubit(ProductEntity product)
       : super(
-          ProductDetailState(
+          ProductDetailReady(
             product: product,
             selectedSize: 'S',
             selectedColorIndex: 5,
@@ -18,21 +18,22 @@ final class ProductDetailCubit extends Cubit<ProductDetailState> {
   static const List<String> kSizes = ['S', 'M', 'L', 'XL', '2XL'];
 
   void selectSize(String size) {
-    emit(state.copyWith(selectedSize: size));
+    emit((state as ProductDetailReady).copyWith(selectedSize: size));
   }
 
   void selectColor(int index) {
-    emit(state.copyWith(selectedColorIndex: index));
+    emit((state as ProductDetailReady).copyWith(selectedColorIndex: index));
   }
 
   void incrementQuantity() {
-    final maxQty = state.product.stock;
-    if (state.quantity >= maxQty) return;
-    emit(state.copyWith(quantity: state.quantity + 1));
+    final ready = state as ProductDetailReady;
+    if (ready.quantity >= ready.product.stock) return;
+    emit(ready.copyWith(quantity: ready.quantity + 1));
   }
 
   void decrementQuantity() {
-    if (state.quantity <= 1) return;
-    emit(state.copyWith(quantity: state.quantity - 1));
+    final ready = state as ProductDetailReady;
+    if (ready.quantity <= 1) return;
+    emit(ready.copyWith(quantity: ready.quantity - 1));
   }
 }

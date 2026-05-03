@@ -1,10 +1,9 @@
 import 'dart:async';
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vantage/core/translations/locale_keys.g.dart';
 
+import '../../domain/entities/auth_error_code.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/usecases/sign_in_with_email_and_password_usecase.dart';
 import '../../domain/usecases/sign_in_with_google_usecase.dart';
@@ -105,22 +104,16 @@ final class AuthCubit extends Cubit<AuthState> {
     return super.close();
   }
 
-  String _mapAuthError(String msg) {
-    if (msg.contains('user-not-found') || msg.contains('wrong-password')) {
-      return LocaleKeys.auth_errorInvalidCredentials.tr();
+  AuthErrorCode _mapAuthError(String msg) {
+    if (msg.contains('user-not-found') ||
+        msg.contains('wrong-password') ||
+        msg.contains('invalid-credential')) {
+      return AuthErrorCode.invalidCredentials;
     }
-    if (msg.contains('email-already-in-use')) {
-      return LocaleKeys.auth_errorEmailInUse.tr();
-    }
-    if (msg.contains('weak-password')) {
-      return LocaleKeys.auth_errorWeakPassword.tr();
-    }
-    if (msg.contains('invalid-email')) {
-      return LocaleKeys.auth_errorInvalidEmail.tr();
-    }
-    if (msg.contains('network-request-failed')) {
-      return LocaleKeys.auth_errorNetwork.tr();
-    }
-    return msg;
+    if (msg.contains('email-already-in-use')) return AuthErrorCode.emailInUse;
+    if (msg.contains('weak-password')) return AuthErrorCode.weakPassword;
+    if (msg.contains('invalid-email')) return AuthErrorCode.invalidEmail;
+    if (msg.contains('network-request-failed')) return AuthErrorCode.network;
+    return AuthErrorCode.unknown;
   }
 }

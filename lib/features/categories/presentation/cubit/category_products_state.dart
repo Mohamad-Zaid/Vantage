@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-
 import 'package:vantage/core/domain/entities/product_entity.dart';
+import 'package:vantage/core/domain/failures/failure.dart';
 
 sealed class CategoryProductsState extends Equatable {
   const CategoryProductsState();
@@ -27,10 +27,10 @@ final class CategoryProductsLoaded extends CategoryProductsState {
 }
 
 final class CategoryProductsError extends CategoryProductsState {
-  const CategoryProductsError(this.message);
+  const CategoryProductsError(this.failure);
 
-  final String message;
+  final Failure failure;
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [failure];
 }

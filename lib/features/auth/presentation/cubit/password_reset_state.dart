@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../domain/entities/auth_error_code.dart';
+
 sealed class PasswordResetState extends Equatable {
   const PasswordResetState();
 
@@ -16,12 +18,12 @@ final class PasswordResetSubmitting extends PasswordResetState {
 }
 
 final class PasswordResetFailure extends PasswordResetState {
-  const PasswordResetFailure(this.message);
+  const PasswordResetFailure(this.code);
 
-  final String message;
+  final AuthErrorCode code;
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [code];
 }
 
 final class PasswordResetSuccess extends PasswordResetState {

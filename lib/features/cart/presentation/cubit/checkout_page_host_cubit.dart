@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:vantage/features/cart/presentation/cubit/checkout_cubit.dart';
 
-class CheckoutPageHostState extends Equatable {
+final class CheckoutPageHostState extends Equatable {
   const CheckoutPageHostState([this.checkoutCubit]);
 
   final CheckoutCubit? checkoutCubit;
@@ -12,7 +12,7 @@ class CheckoutPageHostState extends Equatable {
   List<Object?> get props => [checkoutCubit];
 }
 
-class CheckoutPageHostCubit extends Cubit<CheckoutPageHostState> {
+final class CheckoutPageHostCubit extends Cubit<CheckoutPageHostState> {
   CheckoutPageHostCubit() : super(const CheckoutPageHostState());
 
   void setCheckout(CheckoutCubit? next) {

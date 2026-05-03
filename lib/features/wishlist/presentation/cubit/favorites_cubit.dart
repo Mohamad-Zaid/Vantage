@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:vantage/core/auth/auth_aware_cubit.dart';
+import 'package:vantage/core/domain/failures/failure.dart';
 import 'package:vantage/core/auth/current_user_provider.dart';
 import 'package:vantage/core/cubits/cubit_error_handler.dart';
 import 'package:vantage/core/domain/entities/product_entity.dart';
@@ -75,7 +76,7 @@ final class FavoritesCubit extends AuthAwareCubit<FavoritesState>
       },
       onError: (error) {
         if (isClosed) return;
-        emit(FavoritesError(error.toString()));
+        emit(FavoritesError(UnknownFailure(error.toString())));
       },
     );
   }
@@ -102,7 +103,7 @@ final class FavoritesCubit extends AuthAwareCubit<FavoritesState>
       },
       onError: (error) {
         if (isClosed) return;
-        emit(FavoritesError(error.toString()));
+        emit(FavoritesError(UnknownFailure(error.toString())));
         final previous = _lastLoaded;
         if (previous != null) emit(previous);
       },
@@ -132,7 +133,7 @@ final class FavoritesCubit extends AuthAwareCubit<FavoritesState>
       },
       onError: (error) {
         if (isClosed) return;
-        emit(FavoritesError(error.toString()));
+        emit(FavoritesError(UnknownFailure(error.toString())));
         final previous = _lastLoaded;
         if (previous != null) emit(previous);
       },
@@ -171,7 +172,7 @@ final class FavoritesCubit extends AuthAwareCubit<FavoritesState>
         await refresh();
       },
       onError: (error) {
-        emit(FavoritesError(error.toString()));
+        emit(FavoritesError(UnknownFailure(error.toString())));
         final previous = _lastLoaded;
         if (previous != null) emit(previous);
       },
