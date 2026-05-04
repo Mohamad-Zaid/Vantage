@@ -89,7 +89,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     };
   }
 
-  void _openSizeSheet(BuildContext context, ProductDetailState state) {
+  void _openSizeSheet(BuildContext context, ProductDetailReady state) {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -103,7 +103,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     );
   }
 
-  void _openColorSheet(BuildContext context, ProductDetailState state) {
+  void _openColorSheet(BuildContext context, ProductDetailReady state) {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,

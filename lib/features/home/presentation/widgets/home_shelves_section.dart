@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vantage/core/presentation/failure_display_ext.dart';
 import 'package:vantage/core/translations/locale_keys.g.dart';
 
 import '../cubit/product_cubit.dart';
